@@ -19,5 +19,5 @@ jobs:
           key: ${{ secrets.CPANEL_SSH_KEY }}
           port: ${{ secrets.CPANEL_PORT }}
           script: |
-            cd /home/kazsvnniur/mehaal.tech.repo
-            ./deploy.sh
+            source /home/kazsvnniur/nodevenv/mehaal.tech.repo/24/bin/activate && cd /home/kazsvnniur/mehaal.tech.repo/deploy.sh
+            
