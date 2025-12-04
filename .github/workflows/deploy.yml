@@ -1,23 +1,25 @@
-name: Deploy to cPanel
+name: CI/CD Deploy to cPanel via SSH
 
 on:
   push:
     branches:
-      - main        # agar tumhari production branch ka naam kuch aur hai, usko yahan change karna
-  workflow_dispatch: # manual trigger button
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger deploy on cPanel via SSH
+      - name: GitHub Action checkout (required)
+        uses: actions/checkout@v3
+
+      - name: SSH Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.CPANEL_HOST }}
-          username: ${{ secrets.CPANEL_USER }}
-          key: ${{ secrets.CPANEL_SSH_KEY }}
-          port: ${{ secrets.CPANEL_PORT }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
-            source /home/kazsvnniur/nodevenv/mehaal.tech.repo/24/bin/activate && cd /home/kazsvnniur/mehaal.tech.repo/deploy.sh
-            
+            cd /home/kazsvnniur/mehaal.tech.repo
+            ./deploy.sh
