@@ -54,12 +54,14 @@
 
   const heroLogo = document.getElementById('heroLogo');
   const heroHeadline = document.getElementById('heroHeadline');
-  const bgVideo = document.getElementById('bgVideo');
+  const bgVideo1 = document.getElementById('bgVideo1');
+  const bgVideo2 = document.getElementById('bgVideo2');
   const logoContainer = document.querySelector('.logo-container');
   const headlineContainer = document.querySelector('.headline-container');
 
   let settingsEnabled = true;
   let lastPlaybackRate = 1;
+  let currentVideoIndex = 1;
 
   // Default values
   const defaults = {
@@ -336,13 +338,15 @@
     const speed = parseFloat(e.target.value);
     videoSpeedVal.textContent = speed.toFixed(2);
     lastPlaybackRate = speed;
-    bgVideo.playbackRate = speed;
+    bgVideo1.playbackRate = speed;
+    bgVideo2.playbackRate = speed;
   });
 
   videoVolumeInput.addEventListener('input', (e) => {
     const volume = e.target.value;
     videoVolumeVal.textContent = volume;
-    bgVideo.volume = volume / 100;
+    bgVideo1.volume = volume / 100;
+    bgVideo2.volume = volume / 100;
   });
 
   fadeDurationInput.addEventListener('input', (e) => {
@@ -359,33 +363,46 @@
 
   fadeToggle.addEventListener('change', (e) => {
     if (e.target.checked) {
-      setupVideoFade();
+      setupVideoCrossfade();
     } else {
-      bgVideo.style.animation = 'none';
-      bgVideo.style.opacity = '1';
+      bgVideo1.style.opacity = '1';
+      bgVideo2.style.opacity = '0';
+      bgVideo1.play();
     }
   });
 
-  // Video fade effect on loop
-  function setupVideoFade() {
-    const fadeDuration = parseFloat(fadeDurationInput.value);
-    const fadeOpacity = parseFloat(fadeOpacityInput.value);
+  // Dual video crossfade seamless loop
+  function setupVideoCrossfade() {
+    // Start first video
+    bgVideo1.play();
 
-    bgVideo.addEventListener('ended', () => {
-      bgVideo.classList.add('fade-out');
-      setTimeout(() => {
-        bgVideo.classList.remove('fade-out');
-        bgVideo.play();
-      }, fadeDuration * 1000);
+    bgVideo1.addEventListener('ended', () => {
+      performCrossfade(bgVideo1, bgVideo2);
     });
 
-    bgVideo.addEventListener('play', () => {
-      bgVideo.classList.remove('fade-out');
+    bgVideo2.addEventListener('ended', () => {
+      performCrossfade(bgVideo2, bgVideo1);
     });
   }
 
-  if (fadeToggle.checked) {
-    setupVideoFade();
+  function performCrossfade(outVideo, inVideo) {
+    const fadeDuration = parseFloat(fadeDurationInput.value) * 1000;
+
+    // Start playing the incoming video before crossfade
+    inVideo.currentTime = 0;
+    inVideo.play();
+
+    // Trigger crossfade animations
+    outVideo.classList.add('fade-out');
+    inVideo.classList.add('fade-in');
+
+    // Remove animations after they complete
+    setTimeout(() => {
+      outVideo.classList.remove('fade-out');
+      inVideo.classList.remove('fade-in');
+      outVideo.currentTime = 0;
+      outVideo.pause();
+    }, fadeDuration);
   }
 
   // Save Button
@@ -471,4 +488,9 @@
   // Initialize fade CSS variables
   document.documentElement.style.setProperty('--fade-duration', `${defaults.fadeDuration}s`);
   document.documentElement.style.setProperty('--fade-opacity', defaults.fadeOpacity);
+
+  // Setup video crossfade on page load
+  if (fadeToggle.checked) {
+    setupVideoCrossfade();
+  }
 })();
