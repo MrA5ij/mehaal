@@ -4,6 +4,8 @@
   const closeBtn = document.getElementById('closeSettings');
   const disableBtn = document.getElementById('disableSettings');
   const resetBtn = document.getElementById('resetSettings');
+  const saveBtn = document.getElementById('saveSettings');
+  const loadBtn = document.getElementById('loadSettings');
 
   // Logo Controls
   const logoSizeInput = document.getElementById('logoSize');
@@ -53,6 +55,8 @@
   const heroLogo = document.getElementById('heroLogo');
   const heroHeadline = document.getElementById('heroHeadline');
   const bgVideo = document.getElementById('bgVideo');
+  const logoContainer = document.querySelector('.logo-container');
+  const headlineContainer = document.querySelector('.headline-container');
 
   let settingsEnabled = true;
   let lastPlaybackRate = 1;
@@ -81,6 +85,127 @@
     fadeToggle: true
   };
 
+  // Save settings to localStorage
+  function saveSettingsToStorage() {
+    const settings = {
+      logoSize: logoSizeInput.value,
+      logoPosX: logoPosXInput.value,
+      logoPosY: logoPosYInput.value,
+      logoRot: logoRotInput.value,
+      logoScale: logoScaleInput.value,
+      logoGlow: logoGlowInput.value,
+      logoAnimSpeed: logoAnimSpeedInput.value,
+      logoAnim: logoAnimToggle.checked,
+      headlineSize: headlineSizeInput.value,
+      headlineColor: headlineColorInput.value,
+      headlineAccent: headlineAccentInput.value,
+      headlineGlow: headlineGlowInput.value,
+      headlineLetter: headlineLetterInput.value,
+      headlineWeight: headlineWeightInput.value,
+      headlineGradient: headlineGradientToggle.checked,
+      videoSpeed: videoSpeedInput.value,
+      videoVolume: videoVolumeInput.value,
+      fadeDuration: fadeDurationInput.value,
+      fadeOpacity: fadeOpacityInput.value,
+      fadeToggle: fadeToggle.checked
+    };
+    localStorage.setItem('mehaalSettings', JSON.stringify(settings));
+    showNotification('Settings saved!');
+  }
+
+  // Load settings from localStorage
+  function loadSettingsFromStorage() {
+    const saved = localStorage.getItem('mehaalSettings');
+    if (!saved) {
+      showNotification('No saved settings found');
+      return;
+    }
+
+    const settings = JSON.parse(saved);
+
+    logoSizeInput.value = settings.logoSize || defaults.logoSize;
+    logoPosXInput.value = settings.logoPosX || defaults.logoPosX;
+    logoPosYInput.value = settings.logoPosY || defaults.logoPosY;
+    logoRotInput.value = settings.logoRot || defaults.logoRot;
+    logoScaleInput.value = settings.logoScale || defaults.logoScale;
+    logoGlowInput.value = settings.logoGlow || defaults.logoGlow;
+    logoAnimSpeedInput.value = settings.logoAnimSpeed || defaults.logoAnimSpeed;
+    logoAnimToggle.checked = settings.logoAnim !== undefined ? settings.logoAnim : defaults.logoAnim;
+
+    headlineSizeInput.value = settings.headlineSize || defaults.headlineSize;
+    headlineColorInput.value = settings.headlineColor || defaults.headlineColor;
+    headlineAccentInput.value = settings.headlineAccent || defaults.headlineAccent;
+    headlineGlowInput.value = settings.headlineGlow || defaults.headlineGlow;
+    headlineLetterInput.value = settings.headlineLetter || defaults.headlineLetter;
+    headlineWeightInput.value = settings.headlineWeight || defaults.headlineWeight;
+    headlineGradientToggle.checked = settings.headlineGradient !== undefined ? settings.headlineGradient : defaults.headlineGradient;
+
+    videoSpeedInput.value = settings.videoSpeed || defaults.videoSpeed;
+    videoVolumeInput.value = settings.videoVolume || defaults.videoVolume;
+    fadeDurationInput.value = settings.fadeDuration || defaults.fadeDuration;
+    fadeOpacityInput.value = settings.fadeOpacity || defaults.fadeOpacity;
+    fadeToggle.checked = settings.fadeToggle !== undefined ? settings.fadeToggle : defaults.fadeToggle;
+
+    // Trigger all inputs to update display
+    logoSizeInput.dispatchEvent(new Event('input'));
+    logoPosXInput.dispatchEvent(new Event('input'));
+    logoPosYInput.dispatchEvent(new Event('input'));
+    logoRotInput.dispatchEvent(new Event('input'));
+    logoScaleInput.dispatchEvent(new Event('input'));
+    logoGlowInput.dispatchEvent(new Event('input'));
+    logoAnimSpeedInput.dispatchEvent(new Event('input'));
+    logoAnimToggle.dispatchEvent(new Event('change'));
+
+    headlineSizeInput.dispatchEvent(new Event('input'));
+    headlineColorInput.dispatchEvent(new Event('input'));
+    headlineAccentInput.dispatchEvent(new Event('input'));
+    headlineGlowInput.dispatchEvent(new Event('input'));
+    headlineLetterInput.dispatchEvent(new Event('input'));
+    headlineWeightInput.dispatchEvent(new Event('input'));
+    headlineGradientToggle.dispatchEvent(new Event('change'));
+
+    videoSpeedInput.dispatchEvent(new Event('input'));
+    videoVolumeInput.dispatchEvent(new Event('input'));
+    fadeDurationInput.dispatchEvent(new Event('input'));
+    fadeOpacityInput.dispatchEvent(new Event('input'));
+    fadeToggle.dispatchEvent(new Event('change'));
+
+    showNotification('Settings loaded!');
+  }
+
+  // Show notification
+  function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.cssText = `
+      position: fixed;
+      bottom: 100px;
+      right: 2rem;
+      background: rgba(34, 197, 94, 0.9);
+      color: #f5f5ff;
+      padding: 1rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 600;
+      z-index: 2000;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+      animation: fadeInOut 2s ease-out;
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 2000);
+  }
+
+  // Add fade animation to document
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(20px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(20px); }
+    }
+  `;
+  document.head.appendChild(style);
+
   // Toggle settings panel
   toggleBtn.addEventListener('click', () => {
     settingsPanel.classList.toggle('open');
@@ -100,25 +225,25 @@
   logoPosXInput.addEventListener('input', (e) => {
     const x = e.target.value;
     logoPosXVal.textContent = x;
-    updateLogoTransform();
+    updateLogoContainerTransform();
   });
 
   logoPosYInput.addEventListener('input', (e) => {
     const y = e.target.value;
     logoPosYVal.textContent = y;
-    updateLogoTransform();
+    updateLogoContainerTransform();
   });
 
   logoRotInput.addEventListener('input', (e) => {
     const rot = e.target.value;
     logoRotVal.textContent = rot;
-    updateLogoTransform();
+    updateLogoContainerTransform();
   });
 
   logoScaleInput.addEventListener('input', (e) => {
     const scale = e.target.value;
     logoScaleVal.textContent = scale;
-    updateLogoTransform();
+    updateLogoContainerTransform();
   });
 
   logoGlowInput.addEventListener('input', (e) => {
@@ -143,12 +268,12 @@
     }
   });
 
-  function updateLogoTransform() {
+  function updateLogoContainerTransform() {
     const x = logoPosXInput.value;
     const y = logoPosYInput.value;
     const rot = logoRotInput.value;
     const scale = logoScaleInput.value;
-    heroLogo.style.transform = `translateX(${x}px) translateY(${y}px) rotate(${rot}deg) scale(${scale})`;
+    logoContainer.style.transform = `translateX(${x}px) translateY(${y}px) rotate(${rot}deg) scale(${scale})`;
   }
 
   // HEADLINE CONTROLS
@@ -263,6 +388,16 @@
     setupVideoFade();
   }
 
+  // Save Button
+  saveBtn.addEventListener('click', () => {
+    saveSettingsToStorage();
+  });
+
+  // Load Button
+  loadBtn.addEventListener('click', () => {
+    loadSettingsFromStorage();
+  });
+
   // Reset All
   resetBtn.addEventListener('click', () => {
     logoSizeInput.value = defaults.logoSize;
@@ -298,16 +433,19 @@
     logoAnimSpeedInput.dispatchEvent(new Event('input'));
 
     headlineSizeInput.dispatchEvent(new Event('input'));
+    headlineColorInput.dispatchEvent(new Event('input'));
+    headlineAccentInput.dispatchEvent(new Event('input'));
     headlineGlowInput.dispatchEvent(new Event('input'));
     headlineLetterInput.dispatchEvent(new Event('input'));
     headlineWeightInput.dispatchEvent(new Event('input'));
-    headlineColorInput.dispatchEvent(new Event('input'));
     headlineGradientToggle.dispatchEvent(new Event('change'));
 
     videoSpeedInput.dispatchEvent(new Event('input'));
     videoVolumeInput.dispatchEvent(new Event('input'));
     fadeDurationInput.dispatchEvent(new Event('input'));
     fadeOpacityInput.dispatchEvent(new Event('input'));
+
+    showNotification('All settings reset');
   });
 
   // Disable Settings
@@ -322,6 +460,12 @@
   if (localStorage.getItem('mehaalSettingsDisabled') === 'true') {
     settingsPanel.classList.add('hidden');
     toggleBtn.classList.add('hidden');
+  }
+
+  // Load saved settings on page load
+  const autoLoad = localStorage.getItem('mehaalSettings');
+  if (autoLoad) {
+    loadSettingsFromStorage();
   }
 
   // Initialize fade CSS variables
