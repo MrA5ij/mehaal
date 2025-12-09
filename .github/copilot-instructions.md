@@ -21,9 +21,16 @@ Marketing website for MEHAAL TECH AI—a voice-native AI ecosystem. Minimal Expr
    - 404 handler (checks `/api/` prefix for JSON vs HTML response)
 
 ### API Structure
-- **`routes/users.js`**: Minimal in-memory roster (`{ users: [...] }` format)—placeholder for future database
+- **`routes/users.js`**: Minimal in-memory roster (`{ users: [...] }` format)—placeholder for MySQL database
 - CommonJS modules (`require`/`module.exports`)—no ES6 imports
 - JSON-only API responses (no XML, no streaming)
+
+### Database Configuration (MySQL)
+- **Database**: MySQL (cPanel default)
+- **Pattern**: Create DB connection in `config/` or environment variables
+- **Credentials**: Store in `.env` file (never commit)—use `mysql2` or `mysql` package
+- **Connection example**: `const mysql = require('mysql2'); const pool = mysql.createPool({ host, user, password, database })`
+- Replace in-memory `users` array in `routes/users.js` with actual DB queries when ready
 
 ## Development Workflow
 
@@ -48,10 +55,17 @@ Tests verify three critical paths in `tests/app.test.js`:
 **Pattern**: Use `response.text.toContain()` for HTML assertions, `response.body` for JSON
 
 ### Deployment (cPanel/Passenger)
-- **GitHub Actions**: `deploy.yml` SSHs to cPanel server on push to `main`—runs remote `deploy.sh`
-- **cPanel Node.js App**: Set "Application Startup File" to `server.js` (not `app.js`)
+- **GitHub Actions**: `deploy.yml` (or `.github/workflows/deploy.yml`) SSHs to cPanel on push to `main`
+  - Connects via `appleboy/ssh-action@v1.0.3`
+  - Runs `deploy.sh` script on cPanel server (pulls latest code, restarts app)
+  - Required GitHub secrets: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_PORT`
+- **cPanel Node.js App Setup**:
+  - Set "Application Startup File" to `server.js` (not `app.js`)
+  - Passenger automatically sets `PORT` environment variable
+  - Click "Run NPM Install" to install dependencies
+  - Start application—Passenger handles process management
 - **No build artifacts**: Passenger serves directly from repository—no `dist/` or `build/` folder
-- Required secrets: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_PORT`
+- **MySQL Database**: Create database in cPanel MySQL Databases, add credentials to environment variables
 
 ## Project-Specific Conventions
 
@@ -73,6 +87,13 @@ Tests verify three critical paths in `tests/app.test.js`:
 - **Indentation**: 2 spaces (no tabs)
 - **Quotes**: Single quotes for strings in JavaScript
 - **No client-side JS**: Zero JavaScript in `public/index.html`—all interactions CSS-only
+
+### CSS Animations (Implemented)
+- **Logo animations**: `logoFloat` (6s floating), `logoPulse` (3s glow pulse)
+- **Headline**: `headlineGlow` (4s opacity pulse)
+- **Hover transitions**: 0.3s ease on buttons and cards with `translateY()` transforms
+- **Scroll behavior**: `scroll-behavior: smooth` in HTML for anchor navigation
+- All animations defined in `public/style.css` using `@keyframes`—no JavaScript animation libraries
 
 ## Critical Integration Points
 
