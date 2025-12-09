@@ -296,11 +296,23 @@ CTA: Start Now
 
 
 
-Simple Express + Jade site that shows the MEHAAL TECH AI hero page and static assets from `public/`.
+## Project Structure
+
+Clean Express.js application serving static HTML landing page with scrollable sections showcasing MEHAAL TECH AI products and services.
+
+### Pages
+- **Main Landing**: `public/index.html` - Hero section, vision, projects, and CTA
+- **Terms & Conditions**: `public/terms.html` - Legal terms and conditions
+- **Contact**: `public/contact.html` - Communication channels
+- **Partner**: `public/partner.html` - Partnership opportunities
+
+### API Endpoints
+- `/users` - JSON API with user roster
 
 ## Requirements
-- Node.js 18 or the version offered by your hosting provider
-- npm, pnpm, or yarn for installing dependencies
+- Node.js 18 or newer
+- npm for installing dependencies
+- Only 2 production dependencies: `express` and `morgan`
 
 ## Local Development
 ```bash
@@ -309,11 +321,56 @@ npm start
 ```
 The server listens on `http://localhost:3000` by default. Set the `PORT` environment variable to override it.
 
-## Deploying on cPanel Node.js App
-1. Upload this repository to your cPanel account (e.g. via Git, SFTP, or File Manager).
-2. Open **Setup Node.js App** in cPanel, choose the document root that contains this project, and select a Node.js version (use 18.x or newer).
-3. Set **Application Startup File** to `server.js`. This file now bootstraps the Express server without needing the legacy `bin/www` wrapper.
-4. (Optional) Add environment variables such as `PORT` if you need a fixed port—otherwise Passenger assigns one automatically and passes it through `PORT`.
-5. Click **Run NPM Install** to install dependencies, then press **Start Application**. Passenger will run `npm start`, which calls `node server.js`.
+Open your browser to:
+- Main site: http://localhost:3000
+- Terms: http://localhost:3000/terms.html
+- Contact: http://localhost:3000/contact.html
+- Partner: http://localhost:3000/partner.html
 
-That is all that is required for cPanel; no additional build step is necessary.
+## Testing
+```bash
+npm test
+```
+Runs Jest tests validating static HTML serving and API endpoints.
+
+## Deploying on cPanel Node.js App
+
+### Step-by-Step Deployment
+
+1. **Upload Repository**
+   - Use Git, SFTP, or File Manager to upload to your cPanel account
+   - Recommended: Use Git for version control
+
+2. **Setup Node.js Application**
+   - Open **Setup Node.js App** in cPanel
+   - Choose the document root containing this project
+   - Select Node.js version 18.x or newer
+
+3. **Configure Application**
+   - Set **Application Startup File** to `server.js`
+   - Application Root: Your project directory
+   - Application URL: Your domain/subdomain
+
+4. **Environment Variables** (Optional)
+   - Add `PORT` if you need a fixed port
+   - Otherwise, Passenger assigns one automatically
+
+5. **Install Dependencies**
+   - Click **Run NPM Install**
+   - This installs only `express` and `morgan`
+
+6. **Start Application**
+   - Press **Start Application**
+   - Passenger runs `npm start` which executes `node server.js`
+
+### Important Notes
+- ✅ No build step required - pure Node.js execution
+- ✅ Only 2 production dependencies
+- ✅ All static files served from `public/` directory
+- ✅ Server automatically handles `PORT` environment variable
+
+## Project Conventions
+- **Brand**: "MEHAAL" (all caps) or "MEHAAL TECH AI"
+- **Theme**: Violet-blue gradient (#a855ff, #4f46e5)
+- **Code**: CommonJS (require/module.exports)
+- **Indentation**: 2 spaces

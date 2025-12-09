@@ -1,3 +1,31 @@
-node_modules
+# Dependencies
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+
+# Environment
 .env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+
+# Deployment
 .vercel
+*.zip
+
+# Backups
+*.backup
+*.old.*
+
+# Temp files
+public/content.txt
