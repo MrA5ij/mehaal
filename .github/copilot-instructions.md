@@ -131,9 +131,41 @@ Or temporarily use different port: `$env:PORT=3001; npm start`
 - **Test assertions**: Use `response.text` for HTML content, `response.body` for JSON responses
 - **Port persistence**: Tests use ephemeral ports via `supertest`—no conflicts
 
+## CMS Architecture (MySQL + Custom Admin)
+
+### Admin Panel Structure
+- **Authentication**: Session-based login with bcrypt password hashing
+- **Routes**: `/admin/*` (dashboard, projects, team, settings) - protected by `requireAuth` middleware
+- **API**: `/api/*` (REST endpoints for CRUD operations) - some protected, some public
+- **Templates**: EJS views in `views/admin/` with shared layout
+
+### Database Tables
+- `admin_users` - Admin authentication (username, password_hash, role)
+- `projects` - AI products (slug, title, tagline, description, features)
+- `features` - Project features (linked to projects via foreign key)
+- `team_members` - Team roster (replaces in-memory users)
+- `site_settings` - Key-value site configuration
+
+### Key Patterns
+- **Connection pooling**: `config/database.js` exports query helper and pool
+- **Password security**: Always use `bcrypt.hash()` with 10 rounds for passwords
+- **Middleware chain**: Session → Auth check → Route handler
+- **Soft deletes**: Team members set `is_active = FALSE` instead of hard delete
+- **Environment variables**: All credentials in `.env` (never commit), use `dotenv` package
+
+### Admin Access
+- Login: `/admin/login` (POST username/password)
+- Dashboard: `/admin/dashboard` (requires auth)
+- Logout: `/admin/logout` (destroys session)
+- Default credentials: `admin` / `admin123` (change immediately!)
+
 ## Key Files Reference
 - **Entry points**: `server.js` (production), `app.js` (middleware config)
-- **Routes**: `routes/users.js` (in-memory JSON API)
+- **Routes**: `routes/users.js` (legacy), `routes/admin.js` (admin panel), `routes/api.js` (REST API)
 - **Frontend**: `public/index.html` (150-line landing page), `public/style.css`, `public/legal.css`
+- **Admin UI**: `views/admin/*.ejs` (login, dashboard, projects, team, settings)
+- **Database**: `config/database.js` (connection pool), `config/schema.sql` (table definitions)
+- **Auth**: `middleware/auth.js` (loginUser, requireAuth, requireAdmin)
 - **Tests**: `tests/app.test.js` (3 critical paths)
 - **CI/CD**: `deploy.yml` (GitHub Actions SSH deploy to cPanel)
+- **Setup**: `CMS_SETUP.md` (complete installation and usage guide)

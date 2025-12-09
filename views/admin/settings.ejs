@@ -1,0 +1,44 @@
+<% 
+  var title = 'Site Settings';
+  var page = 'settings';
+  var body = `
+    <h1>Site Settings</h1>
+    
+    <div class="card">
+      <form method="POST" action="/api/settings">
+        ${settings.map(s => `
+          <div class="form-group">
+            <label>${s.setting_key.replace(/_/g, ' ').toUpperCase()}</label>
+            <small style="color: #888; display: block; margin-bottom: 0.5rem;">${s.description || ''}</small>
+            ${s.setting_value.length > 100 ? 
+              `<textarea name="${s.setting_key}" rows="4">${s.setting_value}</textarea>` :
+              `<input type="text" name="${s.setting_key}" value="${s.setting_value}">`
+            }
+          </div>
+        `).join('')}
+        
+        <button type="submit" class="btn">Save All Settings</button>
+      </form>
+    </div>
+    
+    <div class="card">
+      <h2>Add New Setting</h2>
+      <form method="POST" action="/api/settings">
+        <div class="form-group">
+          <label>Setting Key</label>
+          <input type="text" name="key" placeholder="custom_cta_text" required>
+        </div>
+        <div class="form-group">
+          <label>Setting Value</label>
+          <textarea name="value" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" name="description" placeholder="Custom CTA button text">
+        </div>
+        <button type="submit" class="btn">Add Setting</button>
+      </form>
+    </div>
+  `;
+%>
+<%- include('../layout', { title, page, user, body }) %>

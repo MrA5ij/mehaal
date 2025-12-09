@@ -1,0 +1,85 @@
+<% 
+  var title = 'Manage Projects';
+  var page = 'projects';
+  var body = `
+    <h1>Manage Projects</h1>
+    
+    <div class="card">
+      <button class="btn" onclick="showAddForm()">Add New Project</button>
+      
+      <div id="addForm" style="display: none; margin-top: 2rem; padding: 2rem; border: 1px solid rgba(168, 85, 255, 0.3); border-radius: 8px;">
+        <h3>Add New Project</h3>
+        <form method="POST" action="/api/projects" id="projectForm">
+          <div class="form-group">
+            <label>Slug (URL-friendly)</label>
+            <input type="text" name="slug" placeholder="accountant-pro" required>
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" placeholder="ACCOUNTANT PRO" required>
+          </div>
+          <div class="form-group">
+            <label>Tagline</label>
+            <input type="text" name="tagline" placeholder="Professional Accounting Reinvented" required>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Impact Statement</label>
+            <textarea name="impact_statement" required></textarea>
+          </div>
+          <div class="form-group">
+            <label>Display Order</label>
+            <input type="number" name="display_order" value="0">
+          </div>
+          <div class="form-group">
+            <label>Features (one per line)</label>
+            <textarea name="features" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+          </div>
+          <button type="submit" class="btn">Save Project</button>
+          <button type="button" class="btn btn-secondary" onclick="hideAddForm()">Cancel</button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>Existing Projects</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Slug</th>
+            <th>Order</th>
+            <th>Features</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${projects.map(p => `
+            <tr>
+              <td><strong>${p.title}</strong><br><small style="color: #888;">${p.tagline}</small></td>
+              <td>${p.slug}</td>
+              <td>${p.display_order}</td>
+              <td><a href="/admin/projects/${p.id}/features" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Manage Features</a></td>
+              <td>
+                <a href="/admin/projects/${p.id}/edit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Edit</a>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+    
+    <script>
+      function showAddForm() {
+        document.getElementById('addForm').style.display = 'block';
+      }
+      function hideAddForm() {
+        document.getElementById('addForm').style.display = 'none';
+      }
+    </script>
+  `;
+%>
+<%- include('../layout', { title, page, user, body }) %>
