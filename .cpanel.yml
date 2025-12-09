@@ -1,0 +1,21 @@
+---
+deployment:
+  tasks:
+    # 1) Node.js virtualenv ka path ENV me add karo
+    - export PATH=/home/kazsvnniur/nodevenv/mehaal.tech.repo/24/bin:$PATH
+
+    # 2) Repo root me aa jao
+    - cd /home/kazsvnniur/mehaal.tech.repo
+
+    # 3) Dependencies install/update (production style)
+    - npm install --omit=dev
+
+    # Agar tumhein devDependencies bhi chahiye hon to upar wali line ko:
+    # - npm install
+    # se replace kar dena.
+
+    # 4) Build command (agar tumhari app ko build ki zarurat hai)
+    - npm run build
+
+    # 5) CloudLinux Node.js Selector se app ko restart karo
+    - cloudlinux-selector restart --json --interpreter nodejs --app-root /home/kazsvnniur/mehaal.tech.repo || true
