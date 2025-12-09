@@ -24,5 +24,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/kazsvnniur/mehaal.tech.repo
-            /deploy.sh
+            cd /home/kazsvnniur
+            ./deploy.sh
