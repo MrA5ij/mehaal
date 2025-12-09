@@ -2,170 +2,148 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MEHAAL TECH AI</title>
+  <title>MEHAAL TECH AI - Intelligence Beyond Impossible</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
-  <video class="hero-video" id="bgVideo1" autoplay muted playsinline>
+  <!-- Video Background -->
+  <video class="hero-video" id="bgVideo1" autoplay muted playsinline loop>
     <source src="/background.mp4" type="video/mp4" />
   </video>
-  <video class="hero-video hero-video-2" id="bgVideo2" muted playsinline>
-    <source src="/background.mp4" type="video/mp4" />
-  </video>
+  
+  <!-- Hero Section -->
   <main class="hero">
     <div class="hero-content">
       <div class="logo-container">
         <img src="/LOGO.svg" alt="MEHAAL TECH AI" class="hero-logo" id="heroLogo" />
       </div>
       <div class="headline-container">
-        <h1 class="hero-headline" id="heroHeadline">COMING SOON</h1>
+        <h1 class="hero-headline" id="heroHeadline">INTELLIGENCE BEYOND IMPOSSIBLE</h1>
       </div>
     </div>
   </main>
 
-  <!-- Settings Panel -->
-  <div class="settings-panel" id="settingsPanel">
-    <div class="settings-header">
-      <h2>Settings</h2>
-      <button class="settings-close" id="closeSettings">✕</button>
-    </div>
-    <div class="settings-content">
-
-      <!-- LOGO SETTINGS -->
-      <div class="settings-section">
-        <h3 class="section-title">Logo</h3>
-        
-        <div class="settings-group">
-          <label>Size: <span id="logoSizeVal">50</span>vw</label>
-          <input type="range" id="logoSize" min="10" max="80" value="50" />
-        </div>
-
-        <div class="settings-group">
-          <label>Position X: <span id="logoPosXVal">0</span>px</label>
-          <input type="range" id="logoPosX" min="-200" max="200" value="0" />
-        </div>
-
-        <div class="settings-group">
-          <label>Position Y: <span id="logoPosYVal">0</span>px</label>
-          <input type="range" id="logoPosY" min="-200" max="200" value="0" />
-        </div>
-
-        <div class="settings-group">
-          <label>Rotation: <span id="logoRotVal">0</span>°</label>
-          <input type="range" id="logoRotation" min="-45" max="45" value="0" />
-        </div>
-
-        <div class="settings-group">
-          <label>Scale: <span id="logoScaleVal">1</span>x</label>
-          <input type="range" id="logoScale" min="0.5" max="2" step="0.1" value="1" />
-        </div>
-
-        <div class="settings-group">
-          <label>Glow: <span id="logoGlowVal">25</span>px</label>
-          <input type="range" id="logoGlow" min="0" max="100" value="25" />
-        </div>
-
-        <div class="settings-group">
-          <label>Animation Speed: <span id="logoAnimSpeedVal">7</span>s</label>
-          <input type="range" id="logoAnimSpeed" min="2" max="15" step="0.5" value="7" />
-        </div>
-
-        <div class="settings-group">
-          <label>
-            <input type="checkbox" id="logoAnimToggle" checked />
-            Enable Breathing Animation
-          </label>
-        </div>
-      </div>
-
-      <!-- HEADLINE SETTINGS -->
-      <div class="settings-section">
-        <h3 class="section-title">Headline</h3>
-
-        <div class="settings-group">
-          <label>Font Size: <span id="headlineSizeVal">4.2</span>rem</label>
-          <input type="range" id="headlineSize" min="2" max="6" step="0.2" value="4.2" />
-        </div>
-
-        <div class="settings-group">
-          <label>Color</label>
-          <input type="color" id="headlineColor" value="#f4f4ff" />
-        </div>
-
-        <div class="settings-group">
-          <label>Accent Color</label>
-          <input type="color" id="headlineAccent" value="#a855ff" />
-        </div>
-
-        <div class="settings-group">
-          <label>Glow: <span id="headlineGlowVal">20</span>px</label>
-          <input type="range" id="headlineGlow" min="0" max="80" value="20" />
-        </div>
-
-        <div class="settings-group">
-          <label>Letter Spacing: <span id="headlineLetterVal">0.12</span>em</label>
-          <input type="range" id="headlineLetter" min="0" max="0.5" step="0.02" value="0.12" />
-        </div>
-
-        <div class="settings-group">
-          <label>Font Weight: <span id="headlineWeightVal">500</span></label>
-          <input type="range" id="headlineWeight" min="300" max="900" step="100" value="500" />
-        </div>
-
-        <div class="settings-group">
-          <label>
-            <input type="checkbox" id="headlineGradient" checked />
-            Enable Gradient
-          </label>
-        </div>
-      </div>
-
-      <!-- VIDEO LOOP SETTINGS -->
-      <div class="settings-section">
-        <h3 class="section-title">Video Loop</h3>
-
-        <div class="settings-group">
-          <label>Playback Speed: <span id="videoSpeedVal">1</span>x</label>
-          <input type="range" id="videoSpeed" min="0.25" max="2" step="0.05" value="1" />
-        </div>
-
-        <div class="settings-group">
-          <label>Volume: <span id="videoVolumeVal">0</span>%</label>
-          <input type="range" id="videoVolume" min="0" max="100" value="0" />
-        </div>
-
-        <div class="settings-group">
-          <label>Fade Duration: <span id="fadeDurationVal">0.5</span>s</label>
-          <input type="range" id="fadeDuration" min="0.1" max="2" step="0.1" value="0.5" />
-        </div>
-
-        <div class="settings-group">
-          <label>Fade Opacity: <span id="fadeOpacityVal">0.4</span></label>
-          <input type="range" id="fadeOpacity" min="0" max="1" step="0.05" value="0.4" />
-        </div>
-
-        <div class="settings-group">
-          <label>
-            <input type="checkbox" id="fadeToggle" checked />
-            Enable Loop Fade
-          </label>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="settings-actions">
-        <button class="settings-reset" id="resetSettings">Reset All</button>
-        <button class="settings-load" id="loadSettings">Load Saved</button>
-        <button class="settings-save-btn" id="saveSettings">Save Settings</button>
-        <button class="settings-save" id="disableSettings">Disable Settings</button>
+  <!-- Section 1: The Vision -->
+  <section class="vision-section">
+    <div class="section-content">
+      <h2 class="section-title">The Vision</h2>
+      <div class="vision-text">
+        <p class="vision-statement">MEHAAL is designed around one belief:</p>
+        <p class="vision-main">Intelligence should feel natural.<br>
+        Not typed. Not complicated.<br>
+        Just spoken — and understood.</p>
+        <p class="vision-desc">We build voice-native AI that moves beyond interfaces, beyond screens, and beyond traditional limitations.</p>
+        <p class="vision-tagline">A world where your business answers you back.</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Toggle Settings Button -->
-  <button class="settings-toggle" id="toggleSettings">⚙️</button>
+  <!-- Section 2: Projects Ecosystem -->
+  <section class="projects-section" id="projects">
+    <h2 class="section-title">The Ecosystem of MEHAAL AI Projects</h2>
+    
+    <!-- Project 1: Accountant -->
+    <div class="project-card">
+      <h3 class="project-title">ACCOUNTANT</h3>
+      <p class="project-tagline">Your Voice. Your Ledger. Your Clarity.</p>
+      <p class="project-desc">Accountant is a personal financial memory engine powered entirely by conversation. Speak naturally — it listens, organizes, classifies, and recalls every transaction in a voice that mirrors your own tone.</p>
+      <div class="project-features">
+        <div class="feature">Voice Transaction Logging</div>
+        <div class="feature">Instant Spoken Reports</div>
+        <div class="feature">Zero Typing Workflow</div>
+        <div class="feature">Multilingual Natural Understanding</div>
+        <div class="feature">Personal Secure Vault</div>
+        <div class="feature">Conversational Retrieval Engine</div>
+      </div>
+      <p class="project-impact">It feels less like software, more like an extension of your own thinking.</p>
+    </div>
 
-  <script src="/settings.js"></script>
+    <!-- Project 2: Accountant Pro -->
+    <div class="project-card">
+      <h3 class="project-title">ACCOUNTANT PRO</h3>
+      <p class="project-tagline">Professional Accounting Reinvented for Voice.</p>
+      <p class="project-desc">A next-generation accounting system engineered for shops, offices, freelancers, and small businesses. It behaves like a professional accountant — except faster, sharper, and infinitely more scalable.</p>
+      <div class="project-features">
+        <div class="feature">Full Ledger System via Voice</div>
+        <div class="feature">Sales, Expense & Vendor Tracking</div>
+        <div class="feature">Profit & Cashflow Narration</div>
+        <div class="feature">Professional PDF/CSV Reports</div>
+        <div class="feature">Multi-Shop Access</div>
+        <div class="feature">Built-in Audit Trace</div>
+      </div>
+      <p class="project-impact">It turns your voice into a complete finance department.</p>
+    </div>
+
+    <!-- Project 3: Assistant Shop -->
+    <div class="project-card">
+      <h3 class="project-title">ASSISTANT SHOP</h3>
+      <p class="project-tagline">The Invisible Manager That Runs Your Shop.</p>
+      <p class="project-desc">A conversational AI that manages your entire retail ecosystem: Inventory. Expiry. Credit. Sales. Receivings. Just speak — it handles everything.</p>
+      <div class="project-features">
+        <div class="feature">Auto Inventory & Expiry Tracking</div>
+        <div class="feature">Voice-Logged Sales & Ledgers</div>
+        <div class="feature">Daily/Weekly Profit Snapshots</div>
+        <div class="feature">Supplier Receiving Records</div>
+        <div class="feature">Alerts for Stock & Expiry</div>
+        <div class="feature">Retail Intelligence Engine</div>
+      </div>
+      <p class="project-impact">A shop that finally knows itself — and speaks to you when you need it.</p>
+    </div>
+  </section>
+
+  <!-- Custom Feature Section -->
+  <section class="custom-section">
+    <div class="section-content">
+      <h2 class="section-title">Every Business Is Unique. Your AI Should Be Too.</h2>
+      <p class="custom-desc">If you need a specialized workflow, a custom AI module, or a feature made exclusively for your business environment — we build it for you.</p>
+      <div class="cta-buttons">
+        <button class="cta-btn">Request a Custom Feature</button>
+        <button class="cta-btn secondary">Subscribe for Updates</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="final-cta">
+    <div class="section-content">
+      <h2 class="final-headline">Let Your Business Talk Back.</h2>
+      <p class="final-tagline">MEHAAL.TECH AI — Intelligence that listens. Intelligence that speaks. Intelligence beyond impossible.</p>
+      <button class="cta-btn primary">Start Now</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <img src="/LOGO.svg" alt="MEHAAL TECH AI" class="footer-logo" />
+        <p class="footer-tagline">Intelligence Beyond Impossible</p>
+      </div>
+      <div class="footer-links-grid">
+        <div class="footer-column">
+          <h4>Company</h4>
+          <a href="/terms.html">Terms & Conditions</a>
+          <a href="/contact.html">Contact Us</a>
+          <a href="/partner.html">Partner With Us</a>
+        </div>
+        <div class="footer-column">
+          <h4>Products</h4>
+          <a href="#projects">Accountant</a>
+          <a href="#projects">Accountant Pro</a>
+          <a href="#projects">Assistant Shop</a>
+        </div>
+        <div class="footer-column">
+          <h4>Contact</h4>
+          <a href="mailto:support@mehaal.tech">support@mehaal.tech</a>
+          <a href="mailto:business@mehaal.tech">business@mehaal.tech</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 MEHAAL TECH AI. All rights reserved.</p>
+    </div>
+  </footer>
+
 </body>
 </html>
