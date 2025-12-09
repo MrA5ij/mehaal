@@ -42,12 +42,12 @@ app.use('/users', usersRouter); // Legacy in-memory route (keep for backwards co
 app.use('/admin', adminRouter); // Admin panel routes
 app.use('/api', apiRouter); // REST API routes
 
-// 404 handler - return JSON for API, or let static handle HTML
+// 404 handler - return JSON for API, or serve custom 404 page
 app.use(function (req, res) {
   if (req.path.startsWith('/api/')) {
     res.status(404).json({ error: 'Not Found' });
   } else {
-    res.status(404).send('404 - Not Found');
+    res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
   }
 });
 

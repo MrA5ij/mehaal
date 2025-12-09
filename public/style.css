@@ -64,23 +64,27 @@ body {
   line-height: 1.6;
 }
 
-/* Skip Navigation for Accessibility */
+/* Skip Navigation for Accessibility - Hidden until keyboard focus */
 .skip-link {
   position: absolute;
-  top: -40px;
-  left: 0;
+  top: -100px;
+  left: var(--space-sm);
   background: var(--violet-accent);
   color: var(--space-black);
   padding: var(--space-sm) var(--space-lg);
   text-decoration: none;
   font-weight: 600;
-  border-radius: 0 0 8px 0;
-  z-index: 9999;
+  border-radius: 8px;
+  z-index: 10000;
   transition: top var(--transition-fast);
+  opacity: 0;
+  pointer-events: none;
 }
 
 .skip-link:focus {
-  top: 0;
+  top: var(--space-sm);
+  opacity: 1;
+  pointer-events: auto;
   outline: 3px solid var(--violet-light);
   outline-offset: 2px;
 }
