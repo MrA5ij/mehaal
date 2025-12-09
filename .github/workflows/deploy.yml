@@ -25,4 +25,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd /home/kazsvnniur/mehaal.tech.repo
-            ./deploy.sh
+            /deploy.sh
