@@ -3,44 +3,19 @@ var router = express.Router();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// Email configuration
-// For production, use real SMTP credentials in .env file:
-// EMAIL_HOST=smtp.gmail.com (or your provider)
-// EMAIL_PORT=587
-// EMAIL_USER=your-email@gmail.com
-// EMAIL_PASS=your-app-password
-// EMAIL_FROM=noreply@mehaal.tech
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_PORT) || 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-// Route: Submit contact form
-router.post('/submit', async function(req, res) {
-  try {
-    const { name, email, subject, message, type } = req.body;
-
-    // Validation
-    if (!name || !email || !message) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Name, email, and message are required' 
-      });
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Invalid email address' 
-      });
+    // Email to MEHAAL team (using EJS template)
+    const ejs = require('ejs');
+    const path = require('path');
+    const html = await ejs.renderFile(
+      path.join(__dirname, '../views/emails/contact-team.ejs'),
+      { name, email, subject, message, type }
+    );
+    const teamMailOptions = {
+      from: process.env.EMAIL_FROM || `"MEHAAL Contact Form" <${process.env.EMAIL_USER}>`,
+      to: recipientEmail,
+      subject: subject || `New Contact Form Submission from ${name}`,
+      html
+    };
     }
 
     // Determine recipient based on inquiry type

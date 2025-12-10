@@ -1,85 +1,48 @@
 <% 
   var title = 'Manage Team';
   var page = 'team';
-  var body = `
-    <h1>Manage Team Members</h1>
-    
-    <div class="card">
-      <button class="btn" onclick="showAddForm()">Add Team Member</button>
-      
-      <div id="addForm" style="display: none; margin-top: 2rem; padding: 2rem; border: 1px solid rgba(168, 85, 255, 0.3); border-radius: 8px;">
-        <h3>Add Team Member</h3>
-        <form method="POST" action="/api/team">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" name="name" required>
-          </div>
-          <div class="form-group">
-            <label>Role</label>
-            <input type="text" name="role" placeholder="AI Engineer" required>
-          </div>
-          <div class="form-group">
-            <label>Timezone</label>
-            <input type="text" name="timezone" placeholder="Asia/Karachi">
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email">
-          </div>
-          <button type="submit" class="btn">Save Member</button>
-          <button type="button" class="btn btn-secondary" onclick="hideAddForm()">Cancel</button>
-        </form>
-      </div>
-    </div>
-    
-    <div class="card">
-      <h2>Team Members</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Role</th>
-            <th>Timezone</th>
-            <th>Email</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${members.map(m => `
-            <tr>
-              <td>${m.name}</td>
-              <td>${m.role}</td>
-              <td>${m.timezone || '-'}</td>
-              <td>${m.email || '-'}</td>
-              <td>
-                <a href="/admin/team/${m.id}/edit" class="btn btn-secondary" style="padding: 0.5rem 1rem;">Edit</a>
-                <button class="btn btn-danger delete-member" data-id="${m.id}" style="padding: 0.5rem 1rem;">Delete</button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-    
-    <script>
-      function showAddForm() {
-        document.getElementById('addForm').style.display = 'block';
-      }
-      function hideAddForm() {
-        document.getElementById('addForm').style.display = 'none';
-      }
-      
-      // Event delegation for delete buttons
-      document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-member')) {
-          const id = e.target.getAttribute('data-id');
-          if (confirm('Are you sure you want to delete this member?')) {
-            fetch('/api/team/' + id, { method: 'DELETE' })
-              .then(() => location.reload());
-          }
-        }
-      });
-    </script>
-  `;
 %>
-<%- include('../layout', { title, page, user, body }) %>
+<%- include('../layout', { title, page, user, body: `
+  <h1>Manage Team Members</h1>
+  <%- include('../partials/card', { title: null, body: `
+    <%- include('../partials/button', { label: 'Add Team Member', type: 'button', attrs: 'id="showAddTeamBtn"' }) %>
+    <div id="addForm" style="display: none; margin-top: 2rem;">
+      <h3>Add Team Member</h3>
+      <form method="POST" action="/api/team">
+        <%- include('../partials/form-group', { id: 'name', label: 'Name', name: 'name', type: 'text', required: true }) %>
+        <%- include('../partials/form-group', { id: 'role', label: 'Role', name: 'role', type: 'text', required: true }) %>
+        <%- include('../partials/form-group', { id: 'timezone', label: 'Timezone', name: 'timezone', type: 'text', required: false }) %>
+        <%- include('../partials/form-group', { id: 'email', label: 'Email', name: 'email', type: 'email', required: false }) %>
+        <%- include('../partials/button', { label: 'Save Member', type: 'submit' }) %>
+        <%- include('../partials/button', { label: 'Cancel', type: 'button', extraClass: 'btn-secondary', attrs: 'id="cancelAddTeamBtn"' }) %>
+      </form>
+    </div>
+  ` }) %>
+  <%- include('../partials/card', { title: 'Team Members', body: `
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Timezone</th>
+          <th>Email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${members.map(m => `
+          <tr>
+            <td>${m.name}</td>
+            <td>${m.role}</td>
+            <td>${m.timezone || '-'}</td>
+            <td>${m.email || '-'}</td>
+            <td>
+              <a href="/admin/team/${m.id}/edit" class="btn btn-secondary">Edit</a>
+              <button class="btn btn-danger delete-member" data-id="${m.id}">Delete</button>
+            </td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` }) %>
+` }) %>

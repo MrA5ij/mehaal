@@ -4,95 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - MEHAAL Admin</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', 'Segoe UI', sans-serif;
-      background: radial-gradient(ellipse at center, #1a0f3d 0%, #02020a 70%);
-      color: #f4f4ff;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .login-container {
-      background: rgba(5, 5, 25, 0.8);
-      border: 1px solid rgba(168, 85, 255, 0.3);
-      border-radius: 8px;
-      padding: 3rem;
-      width: 100%;
-      max-width: 400px;
-    }
-    .logo {
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #a855ff;
-      margin-bottom: 2rem;
-    }
-    .form-group {
-      margin-bottom: 1.5rem;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: #a855ff;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 0.75rem;
-      background: rgba(5, 5, 25, 0.8);
-      border: 1px solid rgba(168, 85, 255, 0.3);
-      border-radius: 4px;
-      color: #f4f4ff;
-      font-size: 1rem;
-    }
-    .btn {
-      width: 100%;
-      background: #a855ff;
-      color: #fff;
-      padding: 0.75rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-    .btn:hover {
-      background: #9333ea;
-      transform: translateY(-2px);
-    }
-    .alert {
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 4px;
-      background: rgba(220, 38, 38, 0.1);
-      border-left: 4px solid #dc2626;
-      color: #fca5a5;
-    }
-  </style>
+  <link rel="stylesheet" href="/admin.css">
 </head>
 <body>
   <div class="login-container">
     <div class="logo">MEHAAL Admin</div>
-    
     <% if (error) { %>
       <div class="alert"><%= error %></div>
     <% } %>
-    
     <form method="POST" action="/admin/login">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required autofocus>
-      </div>
-      
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required>
-      </div>
-      
-      <button type="submit" class="btn">Login</button>
+      <%- include('../partials/form-group', { id: 'username', label: 'Username', name: 'username', type: 'text', required: true }) %>
+      <%- include('../partials/form-group', { id: 'password', label: 'Password', name: 'password', type: 'password', required: true }) %>
+      <%- include('../partials/button', { label: 'Login', type: 'submit' }) %>
     </form>
   </div>
 </body>

@@ -4,10 +4,14 @@ const logger = require('morgan');
 const session = require('express-session');
 require('dotenv').config();
 
+
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api');
 const contactRouter = require('./routes/contact');
+
+const csrf = require('csurf');
+const rateLimit = require('express-rate-limit');
 
 // Database connection - optional (try to connect but don't block if fails)
 let db = null;
@@ -29,7 +33,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Session middleware for admin authentication
+
+// Enforce session secret in production
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET must be set in production');
+}
 app.use(session({
   secret: process.env.SESSION_SECRET || 'mehaal-tech-secret-change-this',
   resave: false,
@@ -40,11 +48,23 @@ app.use(session({
   }
 }));
 
+// Rate limit login attempts
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: 'Too many login attempts, please try again later.'
+});
+
 // static assets from /public - serves index.html automatically
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// CSRF protection for admin and login
+app.use(['/admin', '/api', '/contact'], csrf());
+
 // Routes
 app.use('/users', usersRouter); // Legacy in-memory route (keep for backwards compatibility)
+app.use('/admin/login', loginLimiter); // Rate limit login
 app.use('/admin', adminRouter); // Admin panel routes
 app.use('/api', apiRouter); // REST API routes
 app.use('/contact', contactRouter); // Contact form routes

@@ -1,51 +1,29 @@
 <% 
   var title = 'Dashboard';
   var page = 'dashboard';
-  var body = `
-    <h1>Welcome, ${user.username}!</h1>
-    
-    <div class="card">
-      <h2>Quick Stats</h2>
-      <p>Content management system for MEHAAL TECH AI website.</p>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 2rem;">
-        <div style="text-align: center;">
-          <div style="font-size: 2.5rem; color: #a855ff; font-weight: 700;">3</div>
-          <div>Projects</div>
-        </div>
-        <div style="text-align: center;">
-          <div style="font-size: 2.5rem; color: #a855ff; font-weight: 700;">18</div>
-          <div>Features</div>
-        </div>
-        <div style="text-align: center;">
-          <div style="font-size: 2.5rem; color: #a855ff; font-weight: 700;">2</div>
-          <div>Team Members</div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="card">
-      <h2>Quick Actions</h2>
-      <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-        <a href="/admin/projects" class="btn">Manage Projects</a>
-        <a href="/admin/team" class="btn btn-secondary">Manage Team</a>
-        ${user.role === 'admin' ? '<a href="/admin/settings" class="btn btn-secondary">Settings</a>' : ''}
-      </div>
-    </div>
-    
-    <div class="card">
-      <h2>API Endpoints</h2>
-      <ul style="list-style: none; padding: 0;">
-        <li style="margin: 0.5rem 0;">
-          <code style="background: rgba(168, 85, 255, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px;">GET /api/projects</code> - Get all projects with features
-        </li>
-        <li style="margin: 0.5rem 0;">
-          <code style="background: rgba(168, 85, 255, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px;">GET /api/team</code> - Get team members
-        </li>
-        <li style="margin: 0.5rem 0;">
-          <code style="background: rgba(168, 85, 255, 0.2); padding: 0.25rem 0.5rem; border-radius: 4px;">GET /api/settings</code> - Get site settings
-        </li>
-      </ul>
-    </div>
-  `;
 %>
-<%- include('../layout', { title, page, user, body }) %>
+<%- include('../layout', { title, page, user, body: `
+  <h1>Welcome, ${user.username}!</h1>
+  <%- include('../partials/card', { title: 'Quick Stats', body: `
+    <p>Content management system for MEHAAL TECH AI website.</p>
+    <div class='dashboard-stats'>
+      <div class='dashboard-stat'><div class='dashboard-stat-value'>3</div><div>Projects</div></div>
+      <div class='dashboard-stat'><div class='dashboard-stat-value'>18</div><div>Features</div></div>
+      <div class='dashboard-stat'><div class='dashboard-stat-value'>2</div><div>Team Members</div></div>
+    </div>
+  ` }) %>
+  <%- include('../partials/card', { title: 'Quick Actions', body: `
+    <div class='dashboard-actions'>
+      <a href='/admin/projects' class='btn'>Manage Projects</a>
+      <a href='/admin/team' class='btn btn-secondary'>Manage Team</a>
+      ${user.role === 'admin' ? `<a href='/admin/settings' class='btn btn-secondary'>Settings</a>` : ''}
+    </div>
+  ` }) %>
+  <%- include('../partials/card', { title: 'API Endpoints', body: `
+    <ul class='api-list'>
+      <li><code>GET /api/projects</code> - Get all projects with features</li>
+      <li><code>GET /api/team</code> - Get team members</li>
+      <li><code>GET /api/settings</code> - Get site settings</li>
+    </ul>
+  ` }) %>
+` }) %>
