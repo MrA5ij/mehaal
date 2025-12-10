@@ -116,8 +116,8 @@
         <h2 id="custom-title" class="section-title">Every Business Is Unique. Your AI Should Be Too.</h2>
         <p class="custom-desc">If you need a specialized workflow, a custom AI module, or a feature made exclusively for your business environment — we build it for you.</p>
         <div class="cta-buttons">
-          <button type="button" class="cta-btn" aria-label="Request a custom AI feature for your business" onclick="openModal('customFeatureModal')">Request a Custom Feature</button>
-          <button type="button" class="cta-btn secondary" aria-label="Subscribe to MEHAAL AI updates" onclick="openModal('subscribeModal')">Subscribe for Updates</button>
+          <button type="button" class="cta-btn" data-modal="customFeatureModal" aria-label="Request a custom AI feature for your business">Request a Custom Feature</button>
+          <button type="button" class="cta-btn secondary" data-modal="subscribeModal" aria-label="Subscribe to MEHAAL AI updates">Subscribe for Updates</button>
         </div>
       </div>
     </section>
@@ -127,7 +127,7 @@
       <div class="section-content">
         <h2 id="final-cta-title" class="final-headline">Let Your Business Talk Back.</h2>
         <p class="final-tagline">MEHAAL.TECH AI — Intelligence that listens. Intelligence that speaks. Intelligence beyond impossible.</p>
-        <button type="button" class="cta-btn primary" aria-label="Start using MEHAAL AI now" onclick="openModal('customFeatureModal')">Start Now</button>
+        <button type="button" class="cta-btn primary" data-modal="customFeatureModal" aria-label="Start using MEHAAL AI now">Start Now</button>
       </div>
     </section>
   </main>
@@ -186,7 +186,7 @@
   <!-- Custom Feature Request Modal -->
   <div id="customFeatureModal" class="modal" role="dialog" aria-labelledby="customFeatureTitle" aria-hidden="true">
     <div class="modal-content">
-      <button class="modal-close" onclick="closeModal('customFeatureModal')" aria-label="Close modal">&times;</button>
+      <button class="modal-close" data-close-modal="customFeatureModal" aria-label="Close modal">&times;</button>
       <h2 id="customFeatureTitle">Request Custom Feature</h2>
       <p>Tell us about your unique business needs and we'll create a tailored AI solution for you.</p>
       <form id="customFeatureForm">
@@ -215,7 +215,7 @@
   <!-- Newsletter Subscribe Modal -->
   <div id="subscribeModal" class="modal" role="dialog" aria-labelledby="subscribeTitle" aria-hidden="true">
     <div class="modal-content">
-      <button class="modal-close" onclick="closeModal('subscribeModal')" aria-label="Close modal">&times;</button>
+      <button class="modal-close" data-close-modal="subscribeModal" aria-label="Close modal">&times;</button>
       <h2 id="subscribeTitle">Subscribe to Updates</h2>
       <p>Be the first to know about new features, product launches, and exclusive insights.</p>
       <form id="subscribeForm">
@@ -234,26 +234,54 @@
   </div>
 
   <script>
-    // Modal functions
-    function openModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.classList.add('active');
-      modal.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    }
+    // Modal Management with Event Delegation
+    const ModalManager = {
+      open(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        // Focus trap
+        const focusableElements = modal.querySelectorAll('button, input, textarea, select, a[href]');
+        if (focusableElements.length > 0) {
+          focusableElements[0].focus();
+        }
+      },
+      
+      close(modalId) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = 'auto';
+      }
+    };
 
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.classList.remove('active');
-      modal.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = 'auto';
-    }
+    // Event Delegation for Modal Triggers
+    document.addEventListener('click', function(e) {
+      // Open modal buttons
+      const openBtn = e.target.closest('[data-modal]');
+      if (openBtn) {
+        e.preventDefault();
+        ModalManager.open(openBtn.dataset.modal);
+        return;
+      }
+      
+      // Close modal buttons
+      const closeBtn = e.target.closest('[data-close-modal]');
+      if (closeBtn) {
+        e.preventDefault();
+        ModalManager.close(closeBtn.dataset.closeModal);
+        return;
+      }
+    });
 
     // Close modal on background click
     document.querySelectorAll('.modal').forEach(modal => {
       modal.addEventListener('click', function(e) {
         if (e.target === this) {
-          closeModal(this.id);
+          ModalManager.close(this.id);
         }
       });
     });
@@ -262,7 +290,7 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal.active').forEach(modal => {
-          closeModal(modal.id);
+          ModalManager.close(modal.id);
         });
       }
     });
@@ -299,7 +327,7 @@
           formMessage.className = 'form-message success';
           formMessage.textContent = result.message;
           document.getElementById('customFeatureForm').reset();
-          setTimeout(() => closeModal('customFeatureModal'), 3000);
+          setTimeout(() => ModalManager.close('customFeatureModal'), 3000);
         } else {
           formMessage.className = 'form-message error';
           formMessage.textContent = result.error || 'Failed to send request.';
@@ -342,7 +370,7 @@
           formMessage.className = 'form-message success';
           formMessage.textContent = result.message;
           document.getElementById('subscribeForm').reset();
-          setTimeout(() => closeModal('subscribeModal'), 3000);
+          setTimeout(() => ModalManager.close('subscribeModal'), 3000);
         } else {
           formMessage.className = 'form-message error';
           formMessage.textContent = result.error || 'Failed to subscribe.';
