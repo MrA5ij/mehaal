@@ -3,20 +3,38 @@ var router = express.Router();
 var nodemailer = require('nodemailer');
 require('dotenv').config();
 
-    // Email to MEHAAL team (using EJS template)
-    const ejs = require('ejs');
-    const path = require('path');
-    const html = await ejs.renderFile(
-      path.join(__dirname, '../views/emails/contact-team.ejs'),
-      { name, email, subject, message, type }
-    );
-    const teamMailOptions = {
-      from: process.env.EMAIL_FROM || `"MEHAAL Contact Form" <${process.env.EMAIL_USER}>`,
-      to: recipientEmail,
-      subject: subject || `New Contact Form Submission from ${name}`,
-      html
-    };
+// Contact form submission route
+router.post('/', async function(req, res) {
+  try {
+    const { name, email, message, type, subject } = req.body;
+
+    // Basic validation
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        error: 'Name, email, and message are required'
+      });
     }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid email address'
+      });
+    }
+
+    // Setup transporter
+    var transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
 
     // Determine recipient based on inquiry type
     let recipientEmail = 'support@mehaal.tech'; // default
