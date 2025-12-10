@@ -7,12 +7,17 @@ require('dotenv').config();
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api');
-const db = require('./config/database');
+
+// Database connection - optional (try to connect but don't block if fails)
+let db = null;
+try {
+  db = require('./config/database');
+  db.testConnection();
+} catch (error) {
+  console.log('⚠️  Database module loaded but connection will be tested when needed');
+}
 
 const app = express();
-
-// Test database connection on startup
-db.testConnection();
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
