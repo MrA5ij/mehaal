@@ -7,6 +7,7 @@ require('dotenv').config();
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
 const apiRouter = require('./routes/api');
+const contactRouter = require('./routes/contact');
 
 // Database connection - optional (try to connect but don't block if fails)
 let db = null;
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/users', usersRouter); // Legacy in-memory route (keep for backwards compatibility)
 app.use('/admin', adminRouter); // Admin panel routes
 app.use('/api', apiRouter); // REST API routes
+app.use('/contact', contactRouter); // Contact form routes
 
 // 404 handler - return JSON for API, or serve custom 404 page
 app.use(function (req, res) {
