@@ -335,9 +335,9 @@ Runs Jest tests validating static HTML serving and API endpoints.
 
 ## Deployment Options
 
-### Option 1: Docker (Recommended)
+### Option 1: Docker (Recommended - Production Ready)
 
-The easiest way to deploy with MySQL database included:
+**Complete isolated environment with MySQL database:**
 
 ```powershell
 # Copy environment template
@@ -350,42 +350,51 @@ npm run docker:up
 
 See **[DOCKER_SETUP.md](DOCKER_SETUP.md)** for complete Docker documentation.
 
-### Option 2: cPanel Node.js App
+**Features:**
+- ✅ MySQL 8.0 container included
+- ✅ Automatic database initialization
+- ✅ Persistent data volumes
+- ✅ Health checks and auto-restart
+- ✅ Isolated networking
+- ✅ No system-wide dependencies
 
-For cPanel hosting without Docker:
+---
 
-1. **Upload Repository**
-   - Use Git, SFTP, or File Manager to upload to your cPanel account
-   - Recommended: Use Git for version control
+### Option 2: cPanel Node.js App (Traditional Hosting)
 
-2. **Setup Node.js Application**
-   - Open **Setup Node.js App** in cPanel
-   - Choose the document root containing this project
-   - Select Node.js version 18.x or newer
+**For shared hosting without Docker support:**
 
-3. **Configure Application**
-   - Set **Application Startup File** to `server.js`
-   - Application Root: Your project directory
-   - Application URL: Your domain/subdomain
+#### Requirements:
+- cPanel with Node.js App support
+- MySQL database (manual setup required)
+- Node.js 18.x or newer
 
-4. **Environment Variables**
+#### Setup Steps:
+
+1. **Create Database First**
+   - Go to cPanel → MySQL Databases
+   - Create database and user
+   - Import schema.sql and cpanel-setup.sql
+
+2. **Upload Code & Configure**
+   - Upload via Git/SFTP
+   - Setup Node.js App in cPanel
+   - Set startup file: `server.js`
+
+3. **Set Environment Variables**
    - Add database credentials if using CMS features
    - Set `SESSION_SECRET` for admin panel
-   - Configure email settings for contact forms
 
-5. **Install Dependencies**
+4. **Install & Start**
    - Click **Run NPM Install**
-   - This installs all required packages
-
-6. **Start Application**
    - Press **Start Application**
-   - Passenger runs `npm start` which executes `node server.js`
 
 ### Important Notes
-- ✅ Docker includes MySQL - no separate database setup needed
-- ✅ cPanel requires manual database creation in MySQL Databases
-- ✅ All static files served from `public/` directory
-- ✅ Server automatically handles `PORT` environment variable
+- Docker and cPanel are **completely independent**
+- Docker does NOT require cPanel
+- cPanel does NOT use Docker
+- Dockerfile is only for Docker deployments
+- `.cpanel.yml` is only for cPanel deployments
 
 ## Project Conventions
 - **Brand**: "MEHAAL" (all caps) or "MEHAAL TECH AI"

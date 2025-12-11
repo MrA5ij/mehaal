@@ -3,6 +3,11 @@
 ## Overview
 Complete Docker setup for MEHAAL TECH AI project with MySQL database and Node.js application in separate containers.
 
+**⚠️ IMPORTANT:** This Docker setup is **completely independent** of cPanel hosting. Docker and cPanel are two different deployment methods - you use ONE or the OTHER, not both together.
+
+- **Use Docker:** For production servers, VPS, cloud hosting, or local development
+- **Use cPanel:** For traditional shared hosting without Docker support
+
 ## Prerequisites
 - Docker Desktop installed (Windows/Mac) or Docker Engine (Linux)
 - Docker Compose v2.0+
@@ -61,8 +66,8 @@ docker-compose down -v
 ```
 
 ### 3. Access Application
-- **Website**: http://localhost:3000
-- **Admin Panel**: http://localhost:3000/admin
+- **Website**: http://localhost:8080
+- **Admin Panel**: http://localhost:8080/admin
 - **MySQL**: localhost:3306
 
 **⚠️ SECURITY: First Login**
@@ -71,6 +76,16 @@ docker-compose down -v
 - Default credentials are set during database initialization (see `cpanel-setup.sql`)
 
 ## Docker Architecture
+
+### Dockerfile Improvements (Latest)
+The production Dockerfile now includes:
+
+✅ **Multi-Stage Build**: Separates dependencies from runtime (~30% size reduction)  
+✅ **Non-Root User**: Runs as `nodejs:1001` for security  
+✅ **Signal Handling**: Uses `dumb-init` for graceful shutdown  
+✅ **Layer Caching**: Optimized order for faster rebuilds  
+✅ **Security Hardening**: Proper file permissions and ownership  
+✅ **Alpine Base**: Minimal image size (~240MB total)  
 
 ### Services
 
@@ -82,11 +97,13 @@ docker-compose down -v
 - **Initialization**: Auto-runs `schema.sql` and `cpanel-setup.sql` on first start
 
 #### 2. Node.js App (`app`)
-- **Base Image**: node:18-alpine
+- **Base Image**: node:18-alpine (multi-stage optimized)
 - **Container**: mehaal-app
-- **Port**: 3000
+- **Port**: 8080 (Docker standard)
+- **User**: nodejs (non-root for security)
 - **Depends On**: MySQL (waits for health check)
 - **Auto-restart**: Unless manually stopped
+- **Health Check**: Every 30s with 5s timeout
 
 ### Docker Compose Features
 ✅ **Health Checks**: Ensures MySQL is ready before starting app  

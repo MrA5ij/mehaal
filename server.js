@@ -2,7 +2,8 @@ const http = require('http');
 const app = require('./app');
 
 // Single entry point so cPanel Node.js App can start the Express server directly
-const port = normalizePort(process.env.PORT || process.env.APP_PORT || '3000');
+// Docker standard port is 8080, cPanel/Passenger will override via PORT env
+const port = normalizePort(process.env.PORT || process.env.APP_PORT || '8080');
 app.set('port', port);
 
 const server = http.createServer(app);

@@ -6,10 +6,11 @@ Marketing website for MEHAAL TECH AI—a voice-native AI ecosystem. Express.js a
 ## Architecture
 
 ### Deployment Philosophy
-- **Docker-first**: Primary deployment method using Docker Compose with MySQL container
-- **Fallback to cPanel**: Traditional cPanel Node.js App deployment for shared hosting
+- **Docker**: Isolated containerized deployment with MySQL container (production/VPS/cloud)
+- **cPanel**: Traditional Node.js App deployment for shared hosting (no Docker)
+- **Important**: Docker and cPanel are INDEPENDENT - not used together
 - **Zero build step**: Direct Node.js execution—no webpack, no transpilation
-- **Database required**: MySQL for CMS features (projects, team, settings)
+- **Database optional**: MySQL required for CMS features, optional for static site
 
 ### Static-First Frontend
 - **Pure HTML/CSS**: `public/index.html` is the complete landing page (150 lines) with hero, vision, projects, custom features, and CTA sections
