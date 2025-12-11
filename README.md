@@ -333,9 +333,26 @@ npm test
 ```
 Runs Jest tests validating static HTML serving and API endpoints.
 
-## Deploying on cPanel Node.js App
+## Deployment Options
 
-### Step-by-Step Deployment
+### Option 1: Docker (Recommended)
+
+The easiest way to deploy with MySQL database included:
+
+```powershell
+# Copy environment template
+Copy-Item .env.docker.template .env
+
+# Edit .env with your credentials
+# Then start services
+npm run docker:up
+```
+
+See **[DOCKER_SETUP.md](DOCKER_SETUP.md)** for complete Docker documentation.
+
+### Option 2: cPanel Node.js App
+
+For cPanel hosting without Docker:
 
 1. **Upload Repository**
    - Use Git, SFTP, or File Manager to upload to your cPanel account
@@ -351,21 +368,22 @@ Runs Jest tests validating static HTML serving and API endpoints.
    - Application Root: Your project directory
    - Application URL: Your domain/subdomain
 
-4. **Environment Variables** (Optional)
-   - Add `PORT` if you need a fixed port
-   - Otherwise, Passenger assigns one automatically
+4. **Environment Variables**
+   - Add database credentials if using CMS features
+   - Set `SESSION_SECRET` for admin panel
+   - Configure email settings for contact forms
 
 5. **Install Dependencies**
    - Click **Run NPM Install**
-   - This installs only `express` and `morgan`
+   - This installs all required packages
 
 6. **Start Application**
    - Press **Start Application**
    - Passenger runs `npm start` which executes `node server.js`
 
 ### Important Notes
-- ✅ No build step required - pure Node.js execution
-- ✅ Only 2 production dependencies
+- ✅ Docker includes MySQL - no separate database setup needed
+- ✅ cPanel requires manual database creation in MySQL Databases
 - ✅ All static files served from `public/` directory
 - ✅ Server automatically handles `PORT` environment variable
 
@@ -374,3 +392,4 @@ Runs Jest tests validating static HTML serving and API endpoints.
 - **Theme**: Violet-blue gradient (#a855ff, #4f46e5)
 - **Code**: CommonJS (require/module.exports)
 - **Indentation**: 2 spaces
+

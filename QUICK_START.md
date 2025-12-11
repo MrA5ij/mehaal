@@ -1,37 +1,96 @@
 # 🚀 MEHAAL TECH AI - QUICK START GUIDE
 
-## 5-Minute Setup
+## Docker Setup (Recommended)
 
-### Step 1: Copy Environment Config
+### Step 1: Copy Environment Template
+```powershell
+Copy-Item .env.docker.template .env
+```
+
+### Step 2: Edit .env with Your Credentials
+```env
+# Database (required)
+DB_ROOT_PASSWORD=your_secure_password
+DB_NAME=mehaal_db
+DB_USER=mehaal_user
+DB_PASSWORD=your_db_password
+
+# Application (required)
+SESSION_SECRET=generate-random-32-chars
+
+# Email (optional - for contact forms)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-app-password
+CONTACT_EMAIL=contact@mehaal.tech
+```
+
+**Generate secure passwords:**
+```powershell
+[System.Web.Security.Membership]::GeneratePassword(32,8)
+```
+
+### Step 3: Start Docker Services
+```powershell
+npm run docker:up
+```
+
+This automatically:
+- ✅ Starts MySQL database container
+- ✅ Creates database schema
+- ✅ Starts Node.js application
+- ✅ Sets up networking between containers
+
+### Step 4: Access Application
+- Website: http://localhost:3000
+- Admin Panel: http://localhost:3000/admin
+- API: http://localhost:3000/api/projects
+
+### Step 5: View Logs
+```powershell
+npm run docker:logs
+```
+
+---
+
+## Manual Setup (Without Docker)
+
+Only if you cannot use Docker:
+
+### Step 1: Install MySQL
+- **Windows**: Download MySQL Installer
+- **Linux**: `sudo apt install mysql-server`
+- **macOS**: `brew install mysql`
+
+### Step 2: Create Database
+```bash
+mysql -u root -p
+CREATE DATABASE mehaal_db;
+CREATE USER 'mehaal_user'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON mehaal_db.* TO 'mehaal_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+### Step 3: Import Schema
+```bash
+mysql -u mehaal_user -p mehaal_db < config/schema.sql
+mysql -u mehaal_user -p mehaal_db < cpanel-setup.sql
+```
+
+### Step 4: Configure Environment
 ```bash
 cp .env.example .env
 ```
 
-### Step 2: Edit .env with Your Email
-```env
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=support@mehaal.tech
-EMAIL_PASS=your-app-password-here
-EMAIL_FROM=noreply@mehaal.tech
+Edit `.env` with your database credentials and email settings.
 
-SUPPORT_EMAIL=support@mehaal.tech
-BUSINESS_EMAIL=business@mehaal.tech
-FOUNDER_EMAIL=founder@mehaal.tech
-```
-
-### Step 3: Start Server
+### Step 5: Start Server
 ```bash
+npm install
 npm start
 ```
-
-Server runs on `http://localhost:3000`
-
-### Step 4: Test It
-- Visit: http://localhost:3000
-- Click: "Request Custom Feature" (button in center section)
-- Fill form and submit
-- Check your email inbox ✅
 
 ---
 
@@ -40,61 +99,68 @@ Server runs on `http://localhost:3000`
 | Feature | Location | Status |
 |---------|----------|--------|
 | Contact Form | /contact.html | ✅ Working |
-| Custom Feature Modal | Homepage CTA button | ✅ Working |
-| Newsletter Subscribe | Homepage CTA button | ✅ Working |
-| Email Replies | Auto sent | ✅ Working |
+| Admin Panel | /admin | ✅ Working |
+| Projects API | /api/projects | ✅ Working |
+| Team API | /api/team | ✅ Working |
+| Email System | Contact forms | ✅ Working |
 | Privacy Policy | /privacy.html | ✅ Complete |
-| Social Links | Footer | ✅ Complete |
 
 ---
 
-## 🔧 Email Providers Quick Setup
+## 🐳 Docker Commands
 
-### Gmail (Recommended)
+```powershell
+# Start services
+npm run docker:up
+
+# View logs
+npm run docker:logs
+
+# Restart app only
+npm run docker:restart
+
+# Stop all services
+npm run docker:down
+
+# Remove all data (⚠️ deletes database)
+npm run docker:clean
+
+# Rebuild containers
+npm run docker:build
+```
+
+---
+
+## 🔧 Email Configuration (Optional)
+
+Docker setup works without email. To enable contact forms:
+
+### Gmail Setup
 1. Enable 2-FA: https://myaccount.google.com/security
 2. Get App Password: https://myaccount.google.com/apppasswords
-3. Copy 16-char password to .env
+3. Add to `.env`:
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-16-char-app-password
+```
 
 ### Office 365
 ```env
-EMAIL_HOST=smtp.office365.com
-EMAIL_USER=your-email@company.onmicrosoft.com
-EMAIL_PASS=your-password
-```
-
-### Custom SMTP
-```env
-EMAIL_HOST=mail.yourserver.com
-EMAIL_PORT=587
-EMAIL_USER=username
-EMAIL_PASS=password
-```
-
----
-
-## 📝 Form Endpoints
-
-```
-POST /contact/submit
-POST /contact/subscribe
-```
-
-Send JSON:
-```json
-{
-  "name": "John",
-  "email": "john@example.com",
-  "message": "Hello!",
-  "type": "general"
-}
+SMTP_HOST=smtp.office365.com
+SMTP_USER=your-email@company.onmicrosoft.com
+SMTP_PASSWORD=your-password
 ```
 
 ---
 
 ## 📊 Email Routing
 
+Contact forms route to different emails based on inquiry type:
+
 **Inquiry Type → Email Address**
-- general → support@mehaal.tech
+- general → Set in CONTACT_EMAIL env var
 - technical → tech@mehaal.tech
 - business → business@mehaal.tech
 - founder → founder@mehaal.tech
@@ -103,79 +169,89 @@ Send JSON:
 
 ## ✅ Testing Checklist
 
-- [ ] npm start (server running)
+### Docker Setup
+- [ ] `npm run docker:up` (services start)
 - [ ] http://localhost:3000 loads
-- [ ] Homepage displays correctly
-- [ ] Click "Request Custom Feature"
-- [ ] Modal opens with animation
-- [ ] Fill form with test data
-- [ ] Click submit
-- [ ] See success message
-- [ ] Email arrives in inbox
-- [ ] Click footer social links
-- [ ] Visit /privacy.html
-- [ ] Visit /contact.html (full form)
-- [ ] Submit contact form
-- [ ] Receive confirmation email
+- [ ] http://localhost:3000/admin (admin login)
+- [ ] http://localhost:3000/api/projects (API works)
+- [ ] Contact form submission
+- [ ] Email delivery (if configured)
+
+### Manual Setup
+- [ ] MySQL database created
+- [ ] Schema imported successfully
+- [ ] `npm start` runs without errors
+- [ ] http://localhost:3000 loads
+- [ ] Admin panel accessible
 
 ---
 
-## 🚀 Deploy to cPanel
+## 🚀 Deploy to Production
 
-1. Push to GitHub: `git push origin main`
-2. SSH into server
-3. Create .env file with production credentials
-4. Run: `npm install`
-5. In cPanel: Click "Run NPM Install"
-6. Restart application
-7. Test at your domain
+### Docker Deployment
+See **[DOCKER_SETUP.md](DOCKER_SETUP.md)** for production deployment with Docker Swarm or Kubernetes.
+
+### cPanel Deployment
+1. Create database in cPanel MySQL Databases
+2. Import `config/schema.sql` and `cpanel-setup.sql`
+3. Upload code via Git/SFTP
+4. Create `.env` with production credentials
+5. Setup Node.js App in cPanel
+6. Set startup file to `server.js`
+7. Click "Run NPM Install"
+8. Start application
 
 ---
 
 ## 🆘 Troubleshooting
 
-**Email not sending?**
-- Check .env file exists and has credentials
-- Verify Gmail app password (not regular password)
+### Docker Issues
+```powershell
+# View logs
+npm run docker:logs
+
+# Restart services
+npm run docker:down
+npm run docker:up
+
+# Check container status
+docker ps
+
+# Access MySQL
+docker exec -it mehaal-mysql mysql -u root -p
+```
+
+### Email Issues
+- Check `.env` has SMTP credentials
+- Use App Password for Gmail (not regular password)
 - Check spam folder
-- Review server logs
+- View logs: `npm run docker:logs`
 
-**Form not working?**
-- Open browser console (F12)
-- Check for errors
-- Verify server running on correct port
-- Check network tab for failed requests
-
-**Modal not opening?**
-- Clear browser cache
-- Try different browser
-- Check console for JavaScript errors
+### Database Connection Issues
+- Ensure `.env` has correct DB credentials
+- Check MySQL container is running: `docker ps`
+- View MySQL logs: `docker logs mehaal-mysql`
 
 ---
 
-## 📚 Full Docs
+## 📚 Complete Documentation
 
-- `EMAIL_SETUP_GUIDE.md` - Detailed email setup
-- `IMPROVEMENTS_SUMMARY.md` - All changes explained
-- `IMPLEMENTATION_CHECKLIST.md` - Complete task list
-- `CMS_SETUP.md` - Admin panel setup
-
----
-
-## 📞 Support Emails
-
-- **General**: support@mehaal.tech
-- **Business**: business@mehaal.tech
-- **Technical**: tech@mehaal.tech
-- **Corporate**: founder@mehaal.tech
+- **[DOCKER_SETUP.md](DOCKER_SETUP.md)** - Complete Docker guide
+- **[CMS_SETUP.md](CMS_SETUP.md)** - Admin panel setup
+- **[EMAIL_SETUP_GUIDE.md](EMAIL_SETUP_GUIDE.md)** - Email configuration
+- **[SECURITY_AUDIT.md](SECURITY_AUDIT.md)** - Security best practices
 
 ---
 
 ## ✨ You're All Set!
 
 Your MEHAAL TECH AI website now has:
-- ✅ Professional email system
-- ✅ Working contact forms
+- ✅ Docker containerization
+- ✅ MySQL database
+- ✅ Admin panel & CMS
+- ✅ REST API
+- ✅ Email system
+- ✅ Production-ready setup
 - ✅ Modal popups
 - ✅ Newsletter system
 - ✅ Privacy policy

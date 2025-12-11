@@ -1,42 +1,61 @@
 # MEHAAL TECH AI - Copilot Instructions
 
 ## Project Overview
-Marketing website for MEHAAL TECH AI—a voice-native AI ecosystem. Minimal Express.js app serving static HTML showcasing three AI products (Accountant, Accountant Pro, Assistant Shop) with brand-focused messaging around voice-first interfaces.
+Marketing website for MEHAAL TECH AI—a voice-native AI ecosystem. Express.js app with Docker containerization, MySQL database, admin CMS panel, and static HTML frontend showcasing three AI products (Accountant, Accountant Pro, Assistant Shop) with brand-focused messaging around voice-first interfaces.
 
 ## Architecture
 
-### Static-First Design Philosophy
-- **Zero build step**: Direct Node.js execution of static file server—no webpack, no transpilation
+### Deployment Philosophy
+- **Docker-first**: Primary deployment method using Docker Compose with MySQL container
+- **Fallback to cPanel**: Traditional cPanel Node.js App deployment for shared hosting
+- **Zero build step**: Direct Node.js execution—no webpack, no transpilation
+- **Database required**: MySQL for CMS features (projects, team, settings)
+
+### Static-First Frontend
 - **Pure HTML/CSS**: `public/index.html` is the complete landing page (150 lines) with hero, vision, projects, custom features, and CTA sections
 - **express.static() middleware** automatically serves `index.html` at `/`—no explicit route handler needed
 - Additional legal pages: `contact.html`, `terms.html`, `partner.html` share `legal.css` stylesheet
 
 ### Entry Points & Middleware Chain
-1. **`server.js`**: Production entry (cPanel/Passenger compatible)—reads `PORT` or `APP_PORT` env vars, handles `EADDRINUSE` errors
+1. **`server.js`**: Production entry (cPanel/Passenger/Docker compatible)—reads `PORT` or `APP_PORT` env vars, handles `EADDRINUSE` errors
 2. **`app.js`**: Express configuration with strict middleware order:
    - Morgan logger (`dev` format)
    - JSON/URL-encoded body parsers
+   - Express session (for admin auth)
    - **Static assets** (`public/`)—must come before API routes
-   - `/users` API route (in-memory JSON data)
+   - `/api/*` routes (public REST API)
+   - `/admin/*` routes (protected CMS panel)
+   - `/contact/*` routes (email handling)
    - 404 handler (checks `/api/` prefix for JSON vs HTML response)
 
-### API Structure
-- **`routes/users.js`**: Minimal in-memory roster (`{ users: [...] }` format)—placeholder for MySQL database
-- CommonJS modules (`require`/`module.exports`)—no ES6 imports
-- JSON-only API responses (no XML, no streaming)
-
-### Database Configuration (MySQL)
-- **Database**: MySQL (cPanel default)
-- **Pattern**: Create DB connection in `config/` or environment variables
-- **Credentials**: Store in `.env` file (never commit)—use `mysql2` or `mysql` package
-- **Connection example**: `const mysql = require('mysql2'); const pool = mysql.createPool({ host, user, password, database })`
-- Replace in-memory `users` array in `routes/users.js` with actual DB queries when ready
+### Database Configuration (MySQL via Docker)
+- **Primary**: Docker Compose manages MySQL 8.0 container automatically
+- **Pattern**: Connection pool in `config/database.js` using `mysql2/promise`
+- **Credentials**: Store in `.env` file (never commit)
+- **Docker**: Database initialized with `config/schema.sql` and `cpanel-setup.sql` on first run
+- **Manual setup**: For cPanel, create database manually and import SQL files via phpMyAdmin
 
 ## Development Workflow
 
-### Local Development
+### Docker Development (Recommended)
 ```powershell
-npm install  # only installs express@4.18.2 and morgan@1.10.0
+# Copy environment template
+Copy-Item .env.docker.template .env
+
+# Edit .env with secure credentials
+# Then start services
+npm run docker:up     # Start MySQL + App containers
+npm run docker:logs   # View live logs
+npm run docker:down   # Stop services
+```
+- **Auto-reload containers**: Changes require `npm run docker:restart` or rebuild
+- **Database persistence**: MySQL data persists in Docker volume `mysql_data`
+- **Port conflicts**: Ensure ports 3000 (app) and 3306 (MySQL) are free
+
+### Local Development (Without Docker)
+```powershell
+# Install MySQL manually first
+npm install
 npm start    # node server.js on port 3000
 ```
 - **Hot-reload not configured**: Restart server manually after changing `app.js` or `routes/`
@@ -47,7 +66,7 @@ npm start    # node server.js on port 3000
 ```powershell
 npm test  # Jest with supertest (testEnvironment: 'node')
 ```
-Tests verify three critical paths in `tests/app.test.js`:
+Tests verify critical paths in `tests/app.test.js`:
 1. Home page serves static HTML containing "MEHAAL" and "INTELLIGENCE BEYOND IMPOSSIBLE"
 2. `/users` API returns JSON with `users` array (each user has `name`, `role`, `timezone`)
 3. Non-existent routes return 404 status
@@ -55,17 +74,22 @@ Tests verify three critical paths in `tests/app.test.js`:
 **Pattern**: Use `response.text.toContain()` for HTML assertions, `response.body` for JSON
 
 ### Deployment (cPanel/Passenger)
+- **Docker Preferred**: Use Docker Compose for production deployment (see DOCKER_SETUP.md)
 - **GitHub Actions**: `deploy.yml` (or `.github/workflows/deploy.yml`) SSHs to cPanel on push to `main`
   - Connects via `appleboy/ssh-action@v1.0.3`
   - Runs `deploy.sh` script on cPanel server (pulls latest code, restarts app)
   - Required GitHub secrets: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `SSH_PORT`
-- **cPanel Node.js App Setup**:
+- **cPanel Node.js App Setup** (if not using Docker):
   - Set "Application Startup File" to `server.js` (not `app.js`)
   - Passenger automatically sets `PORT` environment variable
   - Click "Run NPM Install" to install dependencies
   - Start application—Passenger handles process management
-- **No build artifacts**: Passenger serves directly from repository—no `dist/` or `build/` folder
-- **MySQL Database**: Create database in cPanel MySQL Databases, add credentials to environment variables
+  - **Database**: Create manually in cPanel MySQL Databases, import schema files
+- **Docker Setup** (recommended):
+  - Database included in MySQL container
+  - Auto-initialization with schema.sql and cpanel-setup.sql
+  - Use docker-compose.yml for orchestration
+  - No manual database setup required
 
 ## Project-Specific Conventions
 

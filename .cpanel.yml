@@ -7,15 +7,8 @@ deployment:
     # 2) Repo root me aa jao
     - cd /home/kazsvnniur/mehaal.tech.repo
 
-    # 3) Dependencies install/update (production style)
+    # 3) Dependencies install/update (production only)
     - npm install --omit=dev
 
-    # Agar tumhein devDependencies bhi chahiye hon to upar wali line ko:
-    # - npm install
-    # se replace kar dena.
-
-    # 4) Build command (agar tumhari app ko build ki zarurat hai)
-    - npm run build
-
-    # 5) CloudLinux Node.js Selector se app ko restart karo
+    # 4) CloudLinux Node.js Selector se app ko restart karo
     - cloudlinux-selector restart --json --interpreter nodejs --app-root /home/kazsvnniur/mehaal.tech.repo || true

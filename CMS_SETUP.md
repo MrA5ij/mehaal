@@ -1,59 +1,51 @@
 # MEHAAL CMS Setup Guide
 
-## Quick Start
+## Prerequisites
+
+- **Docker Desktop** (Windows/Mac) or **Docker Engine** (Linux)
+- **Docker Compose** v2.0+
+
+## Quick Start (Docker - Recommended)
 
 ### 1. Install Dependencies
+Docker handles all dependencies automatically. No manual npm install needed.
+
+### 2. Setup Environment
+
+Copy template to `.env`:
 ```powershell
-npm install
+Copy-Item .env.docker.template .env
 ```
 
-This installs:
-- `mysql2` - MySQL database driver
-- `bcryptjs` - Password hashing
-- `express-session` - Session management
-- `ejs` - Template engine for admin UI
-- `dotenv` - Environment variable management
-
-### 2. Setup Database
-
-**On cPanel:**
-1. Go to **MySQL Databases**
-2. Create new database: `your_username_mehaal_db`
-3. Create database user and password
-4. Add user to database with ALL PRIVILEGES
-5. Go to **phpMyAdmin**
-6. Select your database
-7. Go to **Import** tab
-8. Upload `config/schema.sql` file
-9. Click **Go** to import
-
-**Locally (if using XAMPP/WAMP):**
-```powershell
-mysql -u root -p < config/schema.sql
-```
-
-### 3. Configure Environment
-
-Copy `.env.example` to `.env`:
-```powershell
-Copy-Item .env.example .env
-```
-
-Edit `.env` with your actual values:
+Edit `.env` with your secure credentials:
 ```env
-DB_HOST=localhost
-DB_USER=your_cpanel_username_dbname
-DB_PASSWORD=your_database_password
-DB_NAME=your_cpanel_username_mehaal_db
-SESSION_SECRET=generate-random-string-here
+DB_ROOT_PASSWORD=your_secure_root_password
+DB_NAME=mehaal_db
+DB_USER=mehaal_app_user
+DB_PASSWORD=your_secure_db_password
+SESSION_SECRET=generate-random-32-char-string
 ```
 
-**Generate secure session secret:**
+**Generate secure values:**
 ```powershell
+# Strong password (32 characters)
+[System.Web.Security.Membership]::GeneratePassword(32,8)
+
+# Session secret (64 hex characters)
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-### 4. Start Application
+### 3. Start Services
+
+```powershell
+# Start Docker containers (MySQL + App)
+npm run docker:up
+
+# View logs
+npm run docker:logs
+```
+
+### 4. Access Application
 ```powershell
 npm start
 ```
@@ -65,14 +57,50 @@ Open browser to:
 - **Admin Login**: http://localhost:3000/admin/login
 
 **Admin credentials:**
-- Set during database initialization (see `cpanel-setup.sql`)
-- Check your database setup script for initial username/password
+- Initial credentials are created during Docker container initialization
+- Username: `admin` (or check your `cpanel-setup.sql`)
+- Password: Set via database initialization
 - **⚠️ CHANGE PASSWORD IMMEDIATELY after first login!**
 
 **Security Best Practices:**
 - Use strong unique passwords (minimum 16 characters)
 - Never use default or common passwords
 - Rotate passwords regularly
+
+---
+
+## Alternative Setup: cPanel (Without Docker)
+
+If deploying to cPanel shared hosting:
+
+### 1. Create Database Manually
+1. Go to **cPanel → MySQL Databases**
+2. Create new database: `your_username_mehaal_db`
+3. Create database user with secure password
+4. Add user to database with ALL PRIVILEGES
+
+### 2. Import Database Schema
+1. Go to **phpMyAdmin**
+2. Select your database
+3. Go to **Import** tab
+4. Upload `config/schema.sql`
+5. Upload `cpanel-setup.sql`
+6. Click **Go** to import
+
+### 3. Configure Environment
+Create `.env` file with cPanel database credentials:
+```env
+DB_HOST=localhost
+DB_USER=cpanel_username_dbuser
+DB_PASSWORD=your_db_password
+DB_NAME=cpanel_username_mehaal_db
+SESSION_SECRET=generate-random-string
+```
+
+### 4. Deploy Application
+Follow cPanel deployment steps in README.md
+
+---
 
 ## Admin Panel Features
 
