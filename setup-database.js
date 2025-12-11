@@ -101,13 +101,18 @@ async function setupDatabase() {
     console.log('✓ Table site_settings created');
     
     // Insert default admin user (if not exists)
-    const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'admin123', 10);
+    // ⚠️ SECURITY: Set ADMIN_PASSWORD in .env file
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    if (!adminPassword) {
+      throw new Error('ADMIN_PASSWORD environment variable is required. Set it in .env file.');
+    }
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
     await connection.query(`
       INSERT INTO admin_users (username, password_hash, email, role) VALUES (?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE username=username
     `, [
       process.env.ADMIN_USERNAME || 'admin',
-      adminPassword,
+      hashedPassword,
       process.env.ADMIN_EMAIL || 'founder@mehaal.tech',
       'admin'
     ]);
@@ -223,9 +228,9 @@ async function setupDatabase() {
     console.log('\n✅ Database setup completed successfully!');
     console.log('\n📝 Admin Credentials:');
     console.log(`   Username: ${process.env.ADMIN_USERNAME || 'admin'}`);
-    console.log(`   Password: ${process.env.ADMIN_PASSWORD || 'admin123'}`);
-    console.log(`   Email: ${process.env.ADMIN_EMAIL || 'founder@mehaal.tech'}`);
-    console.log('\n⚠️  IMPORTANT: Change the default password after first login!');
+    console.log(`   Password: [Set from ADMIN_PASSWORD env variable]`);
+    console.log(`   Email: ${process.env.ADMIN_EMAIL || 'admin@example.com'}`);
+    console.log('\n⚠️  IMPORTANT: Change the password after first login for security!');
     
   } catch (error) {
     console.error('\n❌ Database setup failed:');

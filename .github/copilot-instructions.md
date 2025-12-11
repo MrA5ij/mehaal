@@ -157,7 +157,7 @@ Or temporarily use different port: `$env:PORT=3001; npm start`
 - Login: `/admin/login` (POST username/password)
 - Dashboard: `/admin/dashboard` (requires auth)
 - Logout: `/admin/logout` (destroys session)
-- Default credentials: `admin` / `admin123` (change immediately!)
+- **Security**: Initial credentials set in database setup - must be changed on first login
 
 ## Key Files Reference
 - **Entry points**: `server.js` (production), `app.js` (middleware config)

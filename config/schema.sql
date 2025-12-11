@@ -63,10 +63,11 @@ CREATE TABLE IF NOT EXISTS site_settings (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Insert default admin user (password: admin123 - CHANGE THIS!)
+-- Insert default admin user
+-- ⚠️ SECURITY: Change this password immediately after first login!
 -- Password hash generated with bcrypt (10 rounds)
 INSERT INTO admin_users (username, password_hash, email, role) VALUES
-('admin', '$2b$10$rGfK5M3H0JqZx1mXQZ0pVOYxJ8h3xH6QZ0pVOYxJ8h3xH6QZ0pVOY', 'founder@mehaal.tech', 'admin')
+('admin', '$2b$10$rGfK5M3H0JqZx1mXQZ0pVOYxJ8h3xH6QZ0pVOYxJ8h3xH6QZ0pVOY', 'admin@example.com', 'admin')
 ON DUPLICATE KEY UPDATE username=username;
 
 -- Insert default projects

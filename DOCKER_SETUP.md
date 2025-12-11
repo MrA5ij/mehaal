@@ -13,16 +13,24 @@ Complete Docker setup for MEHAAL TECH AI project with MySQL database and Node.js
 ### 1. Environment Setup
 Create `.env` file in project root:
 
+```powershell
+# Copy template
+Copy-Item .env.docker.template .env
+
+# Generate strong password (PowerShell)
+[System.Web.Security.Membership]::GeneratePassword(32,8)
+```
+
+Example `.env` file:
 ```env
 # Database Configuration
-DB_ROOT_PASSWORD=your_root_password_here
+DB_ROOT_PASSWORD=Xy9#mK2$pL8@vN4&qR6!wT3
 DB_NAME=mehaal_db
-DB_USER=mehaal_user
-DB_PASSWORD=your_secure_password_here
+DB_USER=mehaal_app_user
+DB_PASSWORD=Hs7$fJ9@bN3&mP5!xQ2#zW8
 
 # Application Configuration
-SESSION_SECRET=your-super-secret-session-key-change-this
-NODE_ENV=production
+SESSION_SECRET=aB3$dE6#fG9@hJ2!kL5&mN8@pQ1#rS4$tU7
 
 # Email Configuration (Optional)
 SMTP_HOST=smtp.gmail.com
@@ -31,6 +39,11 @@ SMTP_USER=your-email@gmail.com
 SMTP_PASSWORD=your-app-password
 CONTACT_EMAIL=contact@mehaal.tech
 ```
+
+**⚠️ SECURITY WARNING:**
+- Never use example passwords in production
+- Generate unique random passwords for each environment
+- Never commit `.env` file to Git
 
 ### 2. Build and Run
 ```powershell
@@ -52,9 +65,10 @@ docker-compose down -v
 - **Admin Panel**: http://localhost:3000/admin
 - **MySQL**: localhost:3306
 
-Default admin credentials:
-- Username: `admin`
-- Password: `admin123` (⚠️ Change immediately!)
+**⚠️ SECURITY: First Login**
+- Use the credentials set in your database setup
+- Change admin password immediately after first login
+- Default credentials are set during database initialization (see `cpanel-setup.sql`)
 
 ## Docker Architecture
 

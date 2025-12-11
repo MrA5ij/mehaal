@@ -64,11 +64,15 @@ Open browser to:
 - **Website**: http://localhost:3000
 - **Admin Login**: http://localhost:3000/admin/login
 
-**Default credentials:**
-- Username: `admin`
-- Password: `admin123`
+**Admin credentials:**
+- Set during database initialization (see `cpanel-setup.sql`)
+- Check your database setup script for initial username/password
+- **⚠️ CHANGE PASSWORD IMMEDIATELY after first login!**
 
-⚠️ **CHANGE PASSWORD IMMEDIATELY!**
+**Security Best Practices:**
+- Use strong unique passwords (minimum 16 characters)
+- Never use default or common passwords
+- Rotate passwords regularly
 
 ## Admin Panel Features
 
