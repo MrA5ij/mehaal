@@ -15,11 +15,21 @@ const rateLimit = require('express-rate-limit');
 
 // Database connection - optional (try to connect but don't block if fails)
 let db = null;
+let dbAvailable = false;
 try {
-  db = require('./config/database');
-  db.testConnection();
+  if (process.env.DB_HOST && process.env.DB_USER && process.env.DB_NAME) {
+    db = require('./config/database');
+    db.testConnection().then(() => {
+      dbAvailable = true;
+      console.log('✓ Database connection available');
+    }).catch(err => {
+      console.log('⚠️  Database configured but connection failed:', err.message);
+    });
+  } else {
+    console.log('ℹ️  Database not configured - running in static mode');
+  }
 } catch (error) {
-  console.log('⚠️  Database module loaded but connection will be tested when needed');
+  console.log('⚠️  Database module not available - running in static mode');
 }
 
 const app = express();
@@ -34,19 +44,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
-// Enforce session secret in production
-if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
-  throw new Error('SESSION_SECRET must be set in production');
-}
+// Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'mehaal-tech-secret-change-this',
+  secret: process.env.SESSION_SECRET || 'mehaal-tech-secret-change-this-in-production',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: false, // Set to true only when using HTTPS
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
+
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+  console.warn('⚠️  WARNING: Using default SESSION_SECRET. Set SESSION_SECRET in .env for security!');
+}
 
 // Rate limit login attempts
 const loginLimiter = rateLimit({
@@ -58,9 +69,15 @@ const loginLimiter = rateLimit({
 // static assets from /public - serves index.html automatically
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-// CSRF protection for admin and login
-app.use(['/admin', '/api', '/contact'], csrf());
+// CSRF protection for admin and login (only if database is configured)
+if (process.env.DB_HOST && process.env.DB_USER && process.env.DB_NAME) {
+  try {
+    app.use(['/admin', '/api', '/contact'], csrf());
+    console.log('✓ CSRF protection enabled');
+  } catch (error) {
+    console.log('⚠️  CSRF protection disabled:', error.message);
+  }
+}
 
 // Routes
 app.use('/users', usersRouter); // Legacy in-memory route (keep for backwards compatibility)

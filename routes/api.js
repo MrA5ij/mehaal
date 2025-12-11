@@ -1,10 +1,31 @@
 var express = require('express');
 var router = express.Router();
 var auth = require('../middleware/auth');
-var db = require('../config/database');
+
+// Check if database is available
+let db = null;
+try {
+  if (process.env.DB_HOST && process.env.DB_USER && process.env.DB_NAME) {
+    db = require('../config/database');
+  }
+} catch (error) {
+  console.log('⚠️  API routes: Database not available');
+}
+
+// Middleware to check database availability
+function requireDatabase(req, res, next) {
+  if (!db) {
+    return res.status(503).json({ 
+      success: false, 
+      error: 'Database not configured',
+      message: 'API requires database connection. Please configure DB_HOST, DB_USER, DB_PASSWORD, DB_NAME.' 
+    });
+  }
+  next();
+}
 
 // Get all projects with features
-router.get('/projects', async function (req, res) {
+router.get('/projects', requireDatabase, async function (req, res) {
   try {
     var projects = await db.query(`
       SELECT p.*, GROUP_CONCAT(f.feature_name ORDER BY f.display_order SEPARATOR '|') as features
@@ -28,7 +49,7 @@ router.get('/projects', async function (req, res) {
 });
 
 // Get single project
-router.get('/projects/:slug', async function (req, res) {
+router.get('/projects/:slug', requireDatabase, async function (req, res) {
   try {
     var projects = await db.query('SELECT * FROM projects WHERE slug = ?', [req.params.slug]);
     if (projects.length === 0) {
@@ -53,7 +74,7 @@ router.get('/projects/:slug', async function (req, res) {
 });
 
 // Create project (protected)
-router.post('/projects', auth.requireAuth, async function (req, res) {
+router.post('/projects', auth.requireAuth, requireDatabase, async function (req, res) {
   try {
     var { slug, title, tagline, description, impact_statement, display_order, features } = req.body;
     
@@ -81,7 +102,7 @@ router.post('/projects', auth.requireAuth, async function (req, res) {
 });
 
 // Update project (protected)
-router.put('/projects/:id', auth.requireAuth, async function (req, res) {
+router.put('/projects/:id', auth.requireAuth, requireDatabase, async function (req, res) {
   try {
     var { title, tagline, description, impact_statement, display_order, features } = req.body;
     
@@ -109,7 +130,7 @@ router.put('/projects/:id', auth.requireAuth, async function (req, res) {
 });
 
 // Delete project (protected, admin only)
-router.delete('/projects/:id', auth.requireAdmin, async function (req, res) {
+router.delete('/projects/:id', auth.requireAdmin, requireDatabase, async function (req, res) {
   try {
     await db.query('DELETE FROM projects WHERE id = ?', [req.params.id]);
     res.json({ success: true });
@@ -119,7 +140,7 @@ router.delete('/projects/:id', auth.requireAdmin, async function (req, res) {
 });
 
 // Get all team members
-router.get('/team', async function (req, res) {
+router.get('/team', requireDatabase, async function (req, res) {
   try {
     var members = await db.query('SELECT * FROM team_members WHERE is_active = TRUE ORDER BY id');
     res.json({ success: true, members: members });
@@ -129,7 +150,7 @@ router.get('/team', async function (req, res) {
 });
 
 // Create team member (protected)
-router.post('/team', auth.requireAuth, async function (req, res) {
+router.post('/team', auth.requireAuth, requireDatabase, async function (req, res) {
   try {
     var { name, role, timezone, email } = req.body;
     
@@ -145,7 +166,7 @@ router.post('/team', auth.requireAuth, async function (req, res) {
 });
 
 // Update team member (protected)
-router.put('/team/:id', auth.requireAuth, async function (req, res) {
+router.put('/team/:id', auth.requireAuth, requireDatabase, async function (req, res) {
   try {
     var { name, role, timezone, email } = req.body;
     
@@ -161,7 +182,7 @@ router.put('/team/:id', auth.requireAuth, async function (req, res) {
 });
 
 // Delete team member (protected)
-router.delete('/team/:id', auth.requireAuth, async function (req, res) {
+router.delete('/team/:id', auth.requireAuth, requireDatabase, async function (req, res) {
   try {
     await db.query('UPDATE team_members SET is_active = FALSE WHERE id = ?', [req.params.id]);
     res.json({ success: true });
@@ -171,7 +192,7 @@ router.delete('/team/:id', auth.requireAuth, async function (req, res) {
 });
 
 // Get site settings
-router.get('/settings', async function (req, res) {
+router.get('/settings', requireDatabase, async function (req, res) {
   try {
     var settings = await db.query('SELECT * FROM site_settings');
     var settingsObj = {};
@@ -185,7 +206,7 @@ router.get('/settings', async function (req, res) {
 });
 
 // Update setting (protected, admin only)
-router.put('/settings/:key', auth.requireAdmin, async function (req, res) {
+router.put('/settings/:key', auth.requireAdmin, requireDatabase, async function (req, res) {
   try {
     var { value } = req.body;
     
