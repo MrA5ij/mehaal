@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: mehaal-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-mehaal_db}
+      MYSQL_USER: ${DB_USER:-mehaal_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-mehaal_password}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./config/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./cpanel-setup.sql:/docker-entrypoint-initdb.d/02-data.sql
+    networks:
+      - mehaal-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Node.js Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mehaal-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_USER: ${DB_USER:-mehaal_user}
+      DB_PASSWORD: ${DB_PASSWORD:-mehaal_password}
+      DB_NAME: ${DB_NAME:-mehaal_db}
+      SESSION_SECRET: ${SESSION_SECRET:-your-secret-key-change-in-production}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      CONTACT_EMAIL: ${CONTACT_EMAIL:-contact@mehaal.tech}
+    ports:
+      - "3000:3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./public:/app/public
+      - ./views:/app/views
+    networks:
+      - mehaal-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+networks:
+  mehaal-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
