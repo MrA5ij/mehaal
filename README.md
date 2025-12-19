@@ -1,404 +1,232 @@
-# MEHAAL TECH AI
+# Mehaal Frontend Prototype v3.0
 
-MEHAAL.TECH AI — MASTER WEB PAGE
+## 🎯 Overview
 
-(English Version)
+This is the **Hero Section prototype** for Mehaal — a modern SaaS landing page starter with cutting-edge animations and design.
 
-COVER SLIDE
-
-Background:(./src/background.png) Violet–Blue radial gradient, soft glow
-Logo:(./src/LOGO.png) White MEHAAL loop symbol, centered
-Tagline:
-INTELLIGENCE BEYOND IMPOSSIBLE
-
-SECTION 1 — The Vision
-
-MEHAAL is designed around one belief:
-Intelligence should feel natural.
-Not typed. Not complicated.
-Just spoken — and understood.
-
-We build voice-native AI that moves beyond interfaces, beyond screens, and beyond traditional limitations.
-
-A world where your business answers you back.
-
-SECTION 2 — The Ecosystem of MEHAAL AI Projects
-
-Smooth scroll transition: soft upward fade, logo loops stretching subtly.
-
-PROJECT 1 — ACCOUNTANT
-Tagline:
-
-Your Voice. Your Ledger. Your Clarity.
-
-Brand-Aligned Description:
-
-Accountant is a personal financial memory engine powered entirely by conversation.
-Speak naturally — it listens, organizes, classifies, and recalls every transaction in a voice that mirrors your own tone.
-
-Core Features (White minimal icons):
-
-Voice Transaction Logging
-
-Instant Spoken Reports
-
-Zero Typing Workflow
-
-Multilingual Natural Understanding
-
-Personal Secure Vault
-
-Conversational Retrieval Engine
-
-Brand Impact Statement:
-
-It feels less like software, more like an extension of your own thinking.
-
-Scroll animation: loops separate into two, then merge → transition to Pro.
-
-PROJECT 2 — ACCOUNTANT PRO
-Tagline:
-
-Professional Accounting Reinvented for Voice.
-
-Brand-Aligned Description:
-
-A next-generation accounting system engineered for shops, offices, freelancers, and small businesses.
-It behaves like a professional accountant —
-except faster, sharper, and infinitely more scalable.
-
-Core Features:
-
-Full Ledger System via Voice
-
-Sales, Expense & Vendor Tracking
-
-Profit & Cashflow Narration
-
-Professional PDF/CSV Reports
-
-Multi-Shop Access
-
-Built-in Audit Trace
-
-Brand Impact Statement:
-
-It turns your voice into a complete finance department.
-
-Scroll animation: shelves sliding into formation → transition to Shop Assist.
-
-PROJECT 3 — ASSISTANT SHOP
-Tagline:
-
-The Invisible Manager That Runs Your Shop.
-
-Brand-Aligned Description:
-
-A conversational AI that manages your entire retail ecosystem:
-Inventory. Expiry. Credit. Sales. Receivings.
-Just speak — it handles everything.
-
-Core Features:
-
-Auto Inventory & Expiry Tracking
-
-Voice-Logged Sales & Ledgers
-
-Daily/Weekly Profit Snapshots
-
-Supplier Receiving Records
-
-Alerts for Stock & Expiry
-
-Retail Intelligence Engine
-
-Brand Impact Statement:
-
-A shop that finally knows itself — and speaks to you when you need it.
-
-Scroll: gradient smoothly deepens → reaching the “Custom Build” zone.
-
-SECTION: CUSTOM FEATURE / ADD-ON DEVELOPMENT
-Headline:
-
-Every Business Is Unique. Your AI Should Be Too.
-
-Subtext (Brand Tone):
-
-If you need a specialized workflow, a custom AI module,
-or a feature made exclusively for your business environment —
-we build it for you.
-
-CTAs:
-
-Request a Custom Feature
-
-Subscribe for Product Updates
-(White buttons, soft glow hover)
-
-Scroll: final gradient → logo pulses once.
-
-FINAL SECTION — CALL TO ACTION
-Headline:
-
-Let Your Business Talk Back.
-
-Subline:
-
-MEHAAL.TECH AI — Intelligence that listens.
-Intelligence that speaks.
-Intelligence beyond impossible.
-
-CTA: Get Started
-
-MEHAAL.TECH AI — MASTER WEB (only when Urdu version selected)
-
-(Urdu Version — Brand Aligned)
-
-COVER SLIDE
-(./src/background.png)
-Violet–Blue gradient
-Logo center  (./src/LOGO.png)
-Tagline: INTELLIGENCE BEYOND IMPOSSIBLE
-
-SECTON 1 — DOUR KA TASAVVUR
-
-MEHAAL ka asool seedha hai:
-Aqli system ko insani guftagoo jitna aasaan hona chahiye.
-
-Screens kam, samajh zyada.
-Buttons kam, awaaz zyada.
-
-Aik aisi duniya jahan aap ka business aap se baat karta hai.
-
-SECTION 2 — MEHAAL AI Projects
-
-Scroll effect: halki roshni, soft loop expansion.
-
-PROJECT 1 — ACCOUNTANT
-Tagline:
-
-Aap ki awaaz. Aap ka hisaab.
-
-Description:
-
-Accountant aik personal financial memory AI hai jo sirf guftagoo se kaam karta hai.
-Aap bolte jao — yeh sun kar record karta jata hai.
-Aap poochon — yeh aap ki zubaan main wapas suna deta hai.
-
-Features:
-
-Awaaz se transaction entry
-
-Immediate spoken reports
-
-Zero typing system
-
-Multi-language understanding
-
-Secure vault
-
-Human-style conversation AI
-
-Impact:
-
-Yeh software nahi lagta — aap ka khud ka sochne ka system lagta hai.
-
-Scroll: subtle loop motion → Pro.
-
-PROJECT 2 — ACCOUNTANT PRO
-Tagline:
-
-Professional accounting — ab sirf bol kar.
-
-Description:
-
-Chhote businesses, shops, aur offices ke liye aik poora voice-enabled accounting system.
-Professional kaam, professional speed main — bina kisi mushkilat ke.
-
-Features:
-
-Voice ledger
-
-Sales/expense/vendor tracking
-
-Profit/Loss & cashflow narration
-
-Professional reports
-
-Multi-shop access
-
-Audit trail system
-
-Impact:
-
-Aap ki awaaz se poora finance department chal padta hai.
-
-Scroll: shop aisles fade in → Shop Assist.
-
-PROJECT 3 — ASSISTANT SHOP
-Tagline:
-
-Aap ki shop ka khamosh manager.
-
-Description:
-
-Inventory, expiry, udhaar, sales, receiving — sab kuch guftagoo se chalnay wala AI system.
-Aap bas poochain. Yeh har cheez yaad rakhta hai.
-
-Features:
-
-Auto inventory tracking
-
-Sales & udhaar voice log
-
-Profit snapshots
-
-Supplier receiving record
-
-Alerts (stock / expiry)
-
-Retail intelligence
-
-Impact:
-
-Shop ko pehli dafa aik zubaan mil jati hai.
-
-Scroll → deep gradient → custom section.
-
-SECTION — CUSTOM FEATURES / ADD-ONS
-Headline:
-
-Koi khaas feature chahiye?
-
-Subtext:
-
-Har business ki apni zaroorat hoti hai.
-Agar aap kisi custom workflow, AI module, integration,
-ya kisi khaas business feature ka design chahte hain —
-MEHAAL woh aap ke liye banata hai.
-
-Buttons:
-
-Custom Feature Request
-
-Subscribe
-
-Scroll → final pulse of logo.
-
-FINAL CTA
-Headline:
-
-Aaj se aap ka business aap se baat karega.
-
-CTA: Start Now
-
-
-
-
-## Project Structure
-
-Clean Express.js application serving static HTML landing page with scrollable sections showcasing MEHAAL TECH AI products and services.
-
-### Pages
-- **Main Landing**: `public/index.html` - Hero section, vision, projects, and CTA
-- **Terms & Conditions**: `public/terms.html` - Legal terms and conditions
-- **Contact**: `public/contact.html` - Communication channels
-- **Partner**: `public/partner.html` - Partnership opportunities
-
-### API Endpoints
-- `/users` - JSON API with user roster
-
-## Requirements
-- Node.js 18 or newer
-- npm for installing dependencies
-- Only 2 production dependencies: `express` and `morgan`
-
-## Local Development
-```bash
-npm install
-npm start
-```
-The server listens on `http://localhost:3000` by default. Set the `PORT` environment variable to override it.
-
-Open your browser to:
-- Main site: http://localhost:3000
-- Terms: http://localhost:3000/terms.html
-- Contact: http://localhost:3000/contact.html
-- Partner: http://localhost:3000/partner.html
-
-## Testing
-```bash
-npm test
-```
-Runs Jest tests validating static HTML serving and API endpoints.
-
-## Deployment Options
-
-### Option 1: Docker (Recommended - Production Ready)
-
-**Complete isolated environment with MySQL database:**
-
-```powershell
-# Copy environment template
-Copy-Item .env.docker.template .env
-
-# Edit .env with your credentials
-# Then start services
-npm run docker:up
-```
-
-See **[DOCKER_SETUP.md](DOCKER_SETUP.md)** for complete Docker documentation.
-
-**Features:**
-- ✅ MySQL 8.0 container included
-- ✅ Automatic database initialization
-- ✅ Persistent data volumes
-- ✅ Health checks and auto-restart
-- ✅ Isolated networking
-- ✅ No system-wide dependencies
+**Status:** ✅ Prototype Ready for Animation Phase
 
 ---
 
-### Option 2: cPanel Node.js App (Traditional Hosting)
+## 📁 Project Structure
 
-**For shared hosting without Docker support:**
+```
+frontend/
+├── hero/
+│   ├── Hero.jsx              # Main hero component
+│   ├── Hero.css              # Hero styles
+│   ├── hero.theme.ts         # Color, typography, gradient tokens
+│   ├── hero.layout.ts        # Spacing & alignment rules
+│   ├── hero.motion.ts        # Animation presets (react-spring)
+│   └── index.ts              # Exports
+├── assets/                   # Static assets (images, icons, etc.)
+├── App.jsx                   # App wrapper
+├── App.css                   # App styles
+├── index.css                 # Global styles
+├── main.jsx                  # Entry point
+├── package.json
+├── vite.config.js            # Vite config
+├── tsconfig.json             # TypeScript config
+├── index.html                # HTML template
+└── README.md                 # This file
+```
 
-#### Requirements:
-- cPanel with Node.js App support
-- MySQL database (manual setup required)
-- Node.js 18.x or newer
+---
 
-#### Setup Steps:
+## 🚀 Quick Start
 
-1. **Create Database First**
-   - Go to cPanel → MySQL Databases
-   - Create database and user
-   - Import schema.sql and cpanel-setup.sql
+### Prerequisites
+- Node.js 16+
+- npm or yarn
 
-2. **Upload Code & Configure**
-   - Upload via Git/SFTP
-   - Setup Node.js App in cPanel
-   - Set startup file: `server.js`
+### Installation
 
-3. **Set Environment Variables**
-   - Add database credentials if using CMS features
-   - Set `SESSION_SECRET` for admin panel
+```bash
+cd frontend
+npm install
+```
 
-4. **Install & Start**
-   - Click **Run NPM Install**
-   - Press **Start Application**
+### Development
 
-### Important Notes
-- Docker and cPanel are **completely independent**
-- Docker does NOT require cPanel
-- cPanel does NOT use Docker
-- Dockerfile is only for Docker deployments
-- `.cpanel.yml` is only for cPanel deployments
+```bash
+npm run dev
+```
 
-## Project Conventions
-- **Brand**: "MEHAAL" (all caps) or "MEHAAL TECH AI"
-- **Theme**: Violet-blue gradient (#a855ff, #4f46e5)
-- **Code**: CommonJS (require/module.exports)
-- **Indentation**: 2 spaces
+Opens at `http://localhost:3000`
 
+### Build
+
+```bash
+npm run build
+npm run preview
+```
+
+---
+
+## 🎨 Key Features
+
+### ✨ Hero Section Components
+
+1. **Background Layers**
+   - Dark gradient base
+   - Radial glow effect
+   - Arc glow accent
+   - Subtle noise texture
+
+2. **Header (Visual Only)**
+   - Logo placeholder
+   - Navigation links with hover underline animation
+   - Sign-in CTA button
+
+3. **Hero Content**
+   - Announcement pill
+   - Large, confident headline with gradient text
+   - Supporting subheadline
+   - Dual CTA buttons (Primary + Secondary)
+
+4. **Visual Anchor**
+   - Rotating portal/arc shape
+   - Subtle blur effect
+   - Positioned bottom-right
+
+### 🎭 Animations (via react-spring)
+
+- **Fade-in:** Main container fades in smoothly
+- **Slide-up:** Headlines, text, and CTAs slide up with stagger
+- **Button Pulse:** Hover effect with glow and scale
+- **Parallax Portal:** Continuous rotation on visual anchor
+- **Responsive:** Adapts to all screen sizes
+
+### 🎨 Theme System
+
+All colors, spacing, and typography are defined in centralized token files:
+
+- `hero.theme.ts` — Colors, gradients, typography
+- `hero.layout.ts` — Spacing, alignment, responsive breakpoints
+- `hero.motion.ts` — Animation presets and timing
+
+**Easy to customize:** Change tokens once, updates everywhere.
+
+---
+
+## 🛠 Tech Stack
+
+- **React 18** — UI framework
+- **Vite** — Lightning-fast build tool
+- **@react-spring/web** — Smooth animations
+- **TypeScript** — Type safety (optional)
+- **CSS** — Modern, responsive styling
+
+---
+
+## 📱 Responsive Design
+
+- **Desktop** (1024px+) — Full hero with portal effect
+- **Tablet** (768px - 1023px) — Scaled content
+- **Mobile** (< 768px) — Optimized layout, stacked navigation
+
+---
+
+## ✅ Rules & Principles
+
+### Hero Design Rules
+1. **Isolation:** Hero is NOT coupled to any app logic
+2. **Reusability:** Can be used as a standalone module
+3. **Performance:** No data fetching, no API calls
+4. **Animation Purpose:** Every animation enhances content, doesn't overshadow it
+
+### Animation Principles
+- **Speed & Consistency:** All animations follow the same timing
+- **Content First:** Message loads immediately, animation enhances
+- **Purposeful Motion:** Every movement guides user attention
+
+---
+
+## 🎬 Next Steps (Roadmap)
+
+- [ ] CMS binding (dynamic headline, copy)
+- [ ] Page routing system
+- [ ] Additional landing page sections
+- [ ] Backend integration (C# / Python)
+- [ ] Advanced parallax effects
+- [ ] Custom cursor implementation
+- [ ] Scroll-triggered animations
+
+---
+
+## 🔧 Customization
+
+### Change Colors
+Edit `hero.theme.ts`:
+```typescript
+colors: {
+  accent: {
+    primary: '#YOUR_COLOR', // Change primary accent
+  },
+}
+```
+
+### Change Animation Speed
+Edit `hero.motion.ts`:
+```typescript
+timing: {
+  normal: { duration: 600 }, // Adjust duration
+}
+```
+
+### Adjust Spacing
+Edit `hero.layout.ts`:
+```typescript
+components: {
+  button: {
+    padding: '1rem 2rem', // Your spacing
+  },
+}
+```
+
+---
+
+## 📚 File Descriptions
+
+| File | Purpose |
+|------|---------|
+| `Hero.jsx` | React component with animation logic |
+| `Hero.css` | All styling for hero section |
+| `hero.theme.ts` | Design tokens (colors, typography) |
+| `hero.layout.ts` | Spacing & layout constants |
+| `hero.motion.ts` | Animation presets for react-spring |
+| `index.ts` | Clean exports for easy imports |
+
+---
+
+## 🚫 What's NOT Included
+
+- ❌ API calls / data fetching
+- ❌ CMS logic
+- ❌ Authentication
+- ❌ Routing / page system
+- ❌ State management
+- ❌ Complex animation physics
+
+**Why?** Keeping hero focused and reusable. Add these layers to parent app as needed.
+
+---
+
+## 💡 Tips
+
+1. **Test animations:** Use browser dev tools to slow down animations for review
+2. **Accessibility:** All buttons support keyboard navigation and focus states
+3. **Performance:** Portal effect uses CSS rotation (GPU-accelerated)
+4. **Mobile:** Animations still smooth on mobile, no jank
+
+---
+
+## 📞 Support
+
+For questions or issues, refer to the architectural decisions in this README or check component comments.
+
+---
+
+**Status:** ✅ Hero locked. Ready for phase 2 (CMS, Routing, Backend)
+
+Happy building! 🚀

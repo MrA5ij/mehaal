@@ -1,0 +1,8 @@
+/* App Container Styles */
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: #0a0612;
+}

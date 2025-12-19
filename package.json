@@ -1,32 +1,26 @@
 {
-  "name": "mehaal.tech",
-  "version": "0.1.0",
-  "private": true,
+  "name": "mehaal-frontend",
+  "version": "3.0.0",
+  "description": "Frontend Hero Prototype - Landing page hero section with animations",
+  "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "test": "jest",
-    "docker:build": "docker-compose build",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down",
-    "docker:logs": "docker-compose logs -f",
-    "docker:restart": "docker-compose restart app",
-    "docker:clean": "docker-compose down -v"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "csurf": "^1.11.0",
-    "dotenv": "^16.4.5",
-    "ejs": "^3.1.10",
-    "express": "^4.18.2",
-    "express-rate-limit": "^8.2.1",
-    "express-session": "^1.18.0",
-    "mariadb": "^3.4.5",
-    "morgan": "^1.10.0",
-    "mysql2": "^3.11.5",
-    "nodemailer": "^7.0.11"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@react-spring/web": "^9.7.3"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
-    "supertest": "^7.1.0"
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.0.0",
+    "typescript": "^5.3.0",
+    "eslint": "^8.54.0",
+    "eslint-plugin-react": "^7.33.0"
   }
 }
