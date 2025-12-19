@@ -6,8 +6,8 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with exact versions
+RUN npm ci
 
 # Copy source code
 COPY . .
@@ -15,19 +15,16 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Runtime stage
+# Runtime stage - Production
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Install a simple HTTP server to serve the static files
+# Install serve for static file serving
 RUN npm install -g serve
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist
-
-# Copy package.json for reference
-COPY package.json ./
 
 # Expose port
 EXPOSE 3000
@@ -36,5 +33,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-# Start the server
+# Production serve (no hot reload, optimized)
 CMD ["serve", "-s", "dist", "-l", "3000"]
