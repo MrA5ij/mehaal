@@ -335,7 +335,7 @@ export default function HomePageEditor() {
             <input
               type="text"
               value={pageData.sections.call_to_action.heading}
-              onChange={(e) =>
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setPageData({
                   ...pageData,
                   sections: {
