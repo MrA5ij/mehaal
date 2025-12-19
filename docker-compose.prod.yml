@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: mehaal-db-prod
+    environment:
+      POSTGRES_USER: ${DB_USER:-mehaal_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_in_production}
+      POSTGRES_DB: ${DB_NAME:-mehaal_db}
+      POSTGRES_INITDB_ARGS: "-c max_connections=200 -c shared_buffers=512MB -c effective_cache_size=2GB"
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./backups:/backups
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-mehaal_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mehaal-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: mehaal-backend-prod
+    expose:
+      - "8000"
+    environment:
+      - DATABASE_URL=postgresql://${DB_USER:-mehaal_user}:${DB_PASSWORD:-change_me_in_production}@postgres:5432/${DB_NAME:-mehaal_db}
+      - DEBUG=False
+      - ENVIRONMENT=production
+      - LOG_LEVEL=info
+      - CORS_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - mehaal-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=https://api.yourdomain.com
+    container_name: mehaal-frontend-prod
+    expose:
+      - "3000"
+    restart: always
+    networks:
+      - mehaal-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: mehaal-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./frontend_build:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+      - frontend
+    restart: always
+    networks:
+      - mehaal-network
+
+networks:
+  mehaal-network:
+    driver: bridge
+
+volumes:
+  postgres_data_prod:
