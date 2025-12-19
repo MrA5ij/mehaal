@@ -9,7 +9,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    minify: 'terser',
+   // minify: 'terser',
     minify: 'esbuild',
   },
 });
