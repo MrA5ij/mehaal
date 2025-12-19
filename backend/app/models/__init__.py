@@ -13,6 +13,7 @@ from .models import (
     Media,
     Base
 )
+from .platform_settings import PlatformSettings
 
 __all__ = [
     "HomePage",
@@ -27,5 +28,6 @@ __all__ = [
     "LegalDocument",
     "SiteSettings",
     "Media",
+    "PlatformSettings",
     "Base"
 ]

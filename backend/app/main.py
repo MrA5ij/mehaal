@@ -11,7 +11,8 @@ from app.routes import (
     signup,
     legal,
     settings,
-    media
+    media,
+    platform_settings
 )
 import os
 from dotenv import load_dotenv
@@ -47,6 +48,7 @@ app.include_router(signup.router)
 app.include_router(legal.router)
 app.include_router(settings.router)
 app.include_router(media.router)
+app.include_router(platform_settings.router)
 
 @app.get("/health")
 async def health_check():
@@ -66,7 +68,8 @@ async def root():
             "auth_pages": "/api/auth-pages",
             "legal": "/api/legal",
             "settings": "/api/settings",
-            "media": "/api/media"
+            "media": "/api/media",
+            "platform_settings": "/api/platform-settings"
         }
     }
 
