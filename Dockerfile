@@ -1,13 +1,13 @@
 # Build stage
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* yarn.lock* pnpm-lock.yaml* ./
 
-# Install dependencies with exact versions
-RUN npm ci
+# Install dependencies with exact versions and network retry
+RUN npm ci --fetch-timeout=60000 --fetch-retries=5
 
 # Copy source code
 COPY . .
