@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Hero from './hero/Hero';
+import AdminLayout from './src/admin/AdminLayout.tsx';
+import Dashboard from './src/admin/Dashboard.tsx';
 import HomePageEditor from './src/admin/HomePageEditor.tsx';
 import PlatformSettingsAdmin from './src/admin/PlatformSettingsAdmin.tsx';
 import './App.css';
@@ -13,9 +15,12 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Hero />} />
           
-          {/* Admin Routes */}
-          <Route path="/admin/home-page" element={<HomePageEditor />} />
-          <Route path="/admin/platform-settings" element={<PlatformSettingsAdmin />} />
+          {/* Admin Routes with Layout */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="home-page" element={<HomePageEditor />} />
+            <Route path="platform-settings" element={<PlatformSettingsAdmin />} />
+          </Route>
         </Routes>
       </div>
     </BrowserRouter>
