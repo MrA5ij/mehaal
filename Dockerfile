@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Runtime stage - Production
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
