@@ -1,4 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
+import './admin.css';
 
 interface Feature {
   id: string;
@@ -176,28 +177,33 @@ export default function HomePageEditor() {
     });
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return (
+    <div className="admin-loading">
+      <div className="loading-spinner"></div>
+      <p>Loading home page data...</p>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            🏠 Home Page CMS
-          </h1>
-          <div className="flex gap-4">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-            >
-              {saving ? 'Saving...' : '💾 Save'}
-            </button>
-            <button
-              onClick={handlePublish}
-              disabled={!pageData.id}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
-            >
+    <div className="admin-page home-page-editor">
+      <div className="admin-page-header">
+        <div className="page-header-left">
+          <h1 className="page-title">🏠 Home Page Editor</h1>
+          <p className="page-subtitle">Customize your home page content and layout</p>
+        </div>
+        <div className="page-actions">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="btn btn-primary"
+          >
+            {saving ? '⏳ Saving...' : '💾 Save Changes'}
+          </button>
+          <button
+            onClick={handlePublish}
+            disabled={!pageData.id}
+            className="btn btn-success"
+          >
               🚀 Publish
             </button>
           </div>

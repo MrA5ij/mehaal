@@ -88,8 +88,10 @@ export default function AdminLayout() {
                 alt="User" 
                 className="user-avatar"
                 onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling.style.display = 'flex';
+                  const target = e.currentTarget as HTMLImageElement;
+                  const sibling = target.nextElementSibling as HTMLElement;
+                  target.style.display = 'none';
+                  if (sibling) sibling.style.display = 'flex';
                 }}
               />
               <div className="avatar-fallback" style={{ display: 'none' }}>
