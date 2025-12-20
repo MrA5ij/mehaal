@@ -1,6 +1,10 @@
 from sqlalchemy.orm import Session
-from app.database.session import SessionLocal
+from app.database.database import SessionLocal, engine
 from app.models.platform_settings import PlatformSettings
+from app.models import Base
+
+# Create tables if not exist
+Base.metadata.create_all(bind=engine)
 
 def seed():
     db: Session = SessionLocal()

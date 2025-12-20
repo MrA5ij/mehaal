@@ -129,3 +129,21 @@ dist
 *.log
 backups
 ```
+
+## Spaceship Hosting (Static Frontend)
+
+Since Spaceship is a static site host, deploy the built frontend:
+
+1. Build the frontend:
+   ```bash
+   npm run build
+   ```
+
+2. Upload the `dist/` folder to Spaceship's file manager or connect Git repository.
+
+3. Set environment variables in Spaceship dashboard:
+   - `VITE_API_URL`: Your backend API URL (e.g., https://your-backend.com)
+
+4. For the backend, host separately on a platform that supports Python/FastAPI (e.g., Railway, Render, or VPS).
+
+5. Update CORS in backend to allow your Spaceship domain.

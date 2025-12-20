@@ -32,12 +32,9 @@ const Hero = () => {
     loadData();
   }, []);
 
-  // Fade-in animation for main container
-  const fadeInSpring = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: 1 },
-    config: config.molasses,
-  });
+  // Entry animation from platform settings
+  const entryAnimation = platformSettings?.hero?.animation?.entry ? motionPresets[platformSettings.hero.animation.entry] : motionPresets['slow-fade-scale'];
+  const fadeInSpring = useSpring(entryAnimation);
 
   // Slide-up animation for headline
   const headlineSpring = useSpring({
@@ -95,10 +92,13 @@ const Hero = () => {
 
   // Apply platform settings
   const styleOverrides = platformSettings ? {
-    '--primary-color': platformSettings.primary_color || '#6666FF',
-    '--background-color': platformSettings.background_color || '#000000',
-    '--foreground-color': platformSettings.foreground_color || '#FFFFFF',
-    '--heading-font': platformSettings.heading_font || 'Cabinet Grotesk',
+    '--primary-color': platformSettings.colors?.primary || '#6666FF',
+    '--background-color': platformSettings.colors?.background || '#000000',
+    '--foreground-color': platformSettings.colors?.foreground || '#FFFFFF',
+    '--muted-color': platformSettings.colors?.muted || '#999999',
+    '--surface-color': platformSettings.colors?.surface || '#0B0B0F',
+    '--heading-font': platformSettings.typography?.heading || 'Cabinet Grotesk',
+    '--body-font': platformSettings.typography?.body || 'Cabinet Grotesk',
   } : {};
 
   return (
