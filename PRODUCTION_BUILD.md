@@ -147,3 +147,31 @@ Since Spaceship is a static site host, deploy the built frontend:
 4. For the backend, host separately on a platform that supports Python/FastAPI (e.g., Railway, Render, or VPS).
 
 5. Update CORS in backend to allow your Spaceship domain.
+
+## Spaceship Hyperlift (VM) Full Deployment
+
+Since Hyperlift provides VM access, deploy both frontend and backend on Spaceship.
+
+### 1. Backend Deployment on VM:
+- SSH into VM: `ssh root@mehaal.tech -p 22022`
+- Upload code: `git clone https://github.com/yourusername/mehaal-backend.git`
+- Set environment variables in Hyperlift dashboard:
+  - DATABASE_URL=sqlite:///./mehaal.db
+  - CORS_ORIGINS=https://mehaal.tech,https://dashboard.mehaal.tech
+  - SECRET_KEY=your-key
+  - APPLICATION_PORT=8080
+- Run: `docker build -t mehaal-backend . && docker run -d -p 8080:8080 mehaal-backend`
+- API URL: https://mehaal.tech/api (or subdomain)
+
+### 2. Frontend Deployment:
+- Build: `npm run build`
+- Upload `dist/` to Hyperlift static hosting.
+- Set VITE_API_URL=https://mehaal.tech/api
+
+### 3. Domain & SSL:
+- mehaal.tech for frontend.
+- Positive SSL active.
+- Thunderbolt for speed.
+
+### 4. Email:
+- Spacemail Pro for support@mehaal.tech
