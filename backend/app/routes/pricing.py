@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.models import PricingPage, PricingPlan
-from app.schemas.schemas import PricingPageCreate, PricingPageUpdate, PricingPageResponse, PricingPlanCreate, PricingPlanResponse
+from app.schemas.schemas import PricingPageCreate, PricingPageUpdate, PricingPageResponse, PricingPlanCreate, PricingPlanUpdate, PricingPlanResponse
 from app.database.database import get_db
 
 router = APIRouter(
