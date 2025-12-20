@@ -204,14 +204,14 @@ export default function HomePageEditor() {
             disabled={!pageData.id}
             className="btn btn-success"
           >
-              🚀 Publish
-            </button>
-          </div>
+            🚀 Publish
+          </button>
         </div>
+      </div>
 
-        {message && (
-          <div className="mb-6 p-4 bg-gray-100 rounded-lg">{message}</div>
-        )}
+      {message && (
+        <div className="mb-6 p-4 bg-gray-100 rounded-lg">{message}</div>
+      )}
 
         {/* Hero Section */}
         <section className="mb-8 border-b pb-8">
