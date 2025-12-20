@@ -1,12 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { heroTheme } from './hero.theme';
 import { heroLayout } from './hero.layout';
 import { heroMotion } from './hero.motion';
+import { getPlatformSettings, getHomePageCMS } from '../src/lib/api';
+import { motionPresets } from '../src/theme/motion';
 import './Hero.css';
 
 const Hero = () => {
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [platformSettings, setPlatformSettings] = useState(null);
+  const [cmsContent, setCmsContent] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch platform settings and CMS content
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [platform, content] = await Promise.all([
+          getPlatformSettings(),
+          getHomePageCMS()
+        ]);
+        setPlatformSettings(platform);
+        setCmsContent(content);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
 
   // Fade-in animation for main container
   const fadeInSpring = useSpring({
@@ -54,8 +78,31 @@ const Hero = () => {
   const primaryButtonSpring = getButtonSpring('primary');
   const secondaryButtonSpring = getButtonSpring('secondary');
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="hero-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
+
+  // Use CMS content with fallbacks
+  const heroTitle = cmsContent?.hero_title || 'Build Something Extraordinary';
+  const heroSubtitle = cmsContent?.hero_subtitle || 'Craft beautiful, performant web experiences with cutting-edge tools and modern design principles.';
+  const ctaText = cmsContent?.hero_cta_text || 'Get Started';
+  const ctaUrl = cmsContent?.hero_cta_url || '#';
+
+  // Apply platform settings
+  const styleOverrides = platformSettings ? {
+    '--primary-color': platformSettings.primary_color || '#6666FF',
+    '--background-color': platformSettings.background_color || '#000000',
+    '--foreground-color': platformSettings.foreground_color || '#FFFFFF',
+    '--heading-font': platformSettings.heading_font || 'Cabinet Grotesk',
+  } : {};
+
   return (
-    <animated.div style={fadeInSpring} className="hero-wrapper">
+    <animated.div style={{ ...fadeInSpring, ...styleOverrides }} className="hero-wrapper">
       {/* Background layers */}
       <div className="hero-background">
         {/* Base dark surface */}
@@ -99,13 +146,12 @@ const Hero = () => {
 
         {/* Primary headline */}
         <animated.h1 className="hero-headline">
-          Build Something <span className="highlight">Extraordinary</span>
+          {heroTitle}
         </animated.h1>
 
         {/* Supporting sentence */}
         <animated.p style={subheadlineSpring} className="hero-supporting">
-          Craft beautiful, performant web experiences with cutting-edge tools
-          and modern design principles.
+          {heroSubtitle}
         </animated.p>
 
         {/* CTA group */}
@@ -115,8 +161,9 @@ const Hero = () => {
             style={primaryButtonSpring}
             onMouseEnter={() => setHoveredButton('primary')}
             onMouseLeave={() => setHoveredButton(null)}
+            onClick={() => window.location.href = ctaUrl}
           >
-            Get Started
+            {ctaText}
           </animated.button>
           <animated.button
             className="hero-btn hero-btn-secondary"

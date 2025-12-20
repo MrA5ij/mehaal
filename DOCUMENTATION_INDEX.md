@@ -1,103 +1,287 @@
-# Mehaal CMS - Complete Documentation Index
+# Mehaal Platform — Complete Documentation Index
 
-## 📚 Documentation Map
+## 📚 Documentation Overview
 
-اس repository میں یہ documentation موجود ہے:
-
----
-
-## 🚀 Getting Started
-
-### Development Setup
-- **[README.md](./README.md)** - Main README
-- **[QUICK_START.md](./QUICK_START.md)** - 5 منٹ میں شروع کریں (اگر موجود ہو)
-
-### First-time Users
-```
-1. Repository clone کریں
-2. npm install چلائیں
-3. docker-compose up -d (backend)
-4. npm run dev (frontend)
-5. Swagger UI دیکھیں: http://localhost:8000/docs
-```
+This is the complete documentation guide for the Mehaal SaaS platform. Choose your path based on your needs.
 
 ---
 
-## 🌐 Domain & Production Deployment
+## 🚀 Getting Started (Start Here)
 
-### Quick Deployment (10 منٹ)
-- **[DOMAIN_QUICK_REFERENCE.md](./DOMAIN_QUICK_REFERENCE.md)** ⚡
-  - تمام steps ایک page میں
-  - فوری setup guide
+### New Developers
+1. **[README.md](./README.md)** — Main project overview
+   - Tech stack overview
+   - Project architecture
+   - Key features summary
+   - Quick start checklist
+
+2. **[GETTING_STARTED.md](./GETTING_STARTED.md)** — 15-minute setup guide ⭐ **START HERE**
+   - Step-by-step frontend setup
+   - Step-by-step backend setup
+   - Docker Compose alternative
+   - Verification checklist
+   - Common issues & fixes
+
+3. **[PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)** — Complete directory map
+   - Full folder structure
+   - File organization
+   - Component hierarchy
+   - Database schema
+   - Data flow diagrams
+
+### First-Time Setup
+
+```bash
+# 1. Clone repository
+git clone https://github.com/yourusername/mehaal.git
+cd mehaal
+
+# 2. Frontend (5 mins)
+npm install
+npm run dev
+
+# 3. Backend (7 mins)
+cd backend
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+python init_db.py
+python seed_db.py
+python app/main.py
+
+# 4. Test
+curl http://localhost:8000/api/platform-settings
+# Should return JSON with platform configuration
+```
+
+---
+
+## 📦 Core Implementation
+
+### Platform Integration
+- **[UPDATE_CORE.md](./UPDATE_CORE.md)** — Core platform setup ⭐ **ESSENTIAL**
+  - Database seeding
+  - Frontend data wiring
+  - Landing page integration
+  - Motion engine setup
+  - Hero component binding
+  - Admin API endpoints
+
+### CMS & Content Management
+- **[QUICK_START_CMS.md](./QUICK_START_CMS.md)** — 5-minute CMS guide
+  - Homepage editor quickstart
+  - Content types
+  - Publishing workflow
+  - Preview functionality
+
+- **[CMS_HOMEPAGE_GUIDE.md](./CMS_HOMEPAGE_GUIDE.md)** — Detailed CMS guide
+  - Complete editor reference
+  - Advanced content features
+  - SEO settings
+  - Media integration
+
+### Admin Dashboard
+- **[ADMIN_USAGE_GUIDE.md](./ADMIN_USAGE_GUIDE.md)** — Admin panel reference
+  - Dashboard overview
+  - Platform settings editor
+  - Content management tools
+  - User management
+  - Analytics dashboard
+
+---
+
+## 🌐 Production Deployment
+
+### Pre-Deployment Checklist
+- **[PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md)** — Pre-launch checklist
+  - Configuration verification
+  - Security checklist
+  - Performance optimization
+  - Backup procedures
+  - Monitoring setup
+
+### Build & Deployment
+- **[PRODUCTION_BUILD.md](./PRODUCTION_BUILD.md)** — Build optimization guide
+  - Production build process
+  - Optimization techniques
+  - Asset minification
+  - Code splitting strategy
+
+- **[PRODUCTION_COMPLETE_GUIDE.md](./PRODUCTION_COMPLETE_GUIDE.md)** — Full deployment guide
+  - Complete production setup
+  - Docker container building
+  - Server configuration
+  - Database optimization
+  - Monitoring & logging
+
+### Domain Setup
+- **[DOMAIN_QUICK_REFERENCE.md](./DOMAIN_QUICK_REFERENCE.md)** ⚡ — 10-minute deployment
+  - Quick reference guide
+  - Essential steps only
   - Checklist format
-  - **پہلے یہ پڑھیں!**
+  - Critical verification points
 
-### Detailed Domain Setup
-- **[DOMAIN_SETUP.md](./DOMAIN_SETUP.md)** 📚
-  - 10 مرحلوں میں مکمل guide
-  - DNS, SSL, Nginx, Docker
-  - تمام configuration مثالیں
-  - Verification steps
-  - **اگر تفصیلات چاہیں تو یہ پڑھیں**
+- **[DOMAIN_SETUP.md](./DOMAIN_SETUP.md)** 📚 — Comprehensive domain guide
+  - Step-by-step instructions
+  - DNS configuration
+  - SSL/TLS setup
+  - Nginx configuration
+  - Docker deployment
+  - All examples included
 
-### Domain Setup Scripts
-
-#### Windows Users
-- **[setup-domain.ps1](./setup-domain.ps1)** 🪟
-  - PowerShell script
-  - خودکار configuration
-  - Interactive questions
-  - تمام files auto-generate
-  ```powershell
-  PowerShell -ExecutionPolicy Bypass -File setup-domain.ps1
-  ```
-
-#### Linux/Mac Users
-- **[setup-domain.sh](./setup-domain.sh)** 🔧
-  - Bash script
-  - خودکار configuration
-  - Interactive setup
-  - DNS اور SSL instructions
-  ```bash
-  chmod +x setup-domain.sh
-  ./setup-domain.sh
-  ```
-
-### Domain Documentation
-- **[DOMAIN_README.md](./DOMAIN_README.md)** 📖
-  - تمام domain docs کا overview
-  - کون سا document کب استعمال کریں
-  - Complete deployment steps
+- **[DOMAIN_README.md](./DOMAIN_README.md)** — Domain documentation overview
+  - Which guide to use when
+  - Complete deployment paths
   - Server recommendations
-  - Monitoring guide
+  - Monitoring checklist
 
-### Troubleshooting
-- **[DEPLOYMENT_TROUBLESHOOTING.md](./DEPLOYMENT_TROUBLESHOOTING.md)** 🔧
-  - مسائل کی تشخیص
-  - Flowchart-based debugging
-  - 13 عام مسائل اور حل
-  - Emergency recovery procedures
-  - Diagnostic commands
+### Automation Scripts
+- **[setup-domain.ps1](./setup-domain.ps1)** — Windows PowerShell setup
+  - Automatic configuration
+  - Interactive questions
+  - Auto-generates configs
+  - One-command deployment
+
+- **[setup-domain.sh](./setup-domain.sh)** — Linux/Mac Bash setup
+  - Automatic configuration
+  - Interactive setup
+  - DNS/SSL instructions
 
 ---
 
 ## 💾 Database & Backend
 
-### Database Setup
-- **[DATABASE_SETUP.md](./DATABASE_SETUP.md)** 🗄️
+### Database Configuration
+- **[DATABASE_SETUP.md](./DATABASE_SETUP.md)** — Database setup guide
   - PostgreSQL installation
-  - Connection strings
+  - Connection configuration
   - Database initialization
-  - Migrations guide
+  - Schema & migrations
   - Backup procedures
+  - Query optimization
 
-### Production Database
-- **[PRODUCTION_COMPLETE_GUIDE.md](./PRODUCTION_COMPLETE_GUIDE.md)** (اگر موجود ہو)
-  - Database optimization
-  - Connection pooling
-  - Performance tuning
+### Media & File Handling
+- **[MEDIA_UPLOAD_IMPLEMENTATION.md](./MEDIA_UPLOAD_IMPLEMENTATION.md)** — Media upload system
+  - Upload API implementation
+  - File storage strategy
+  - CDN integration
+  - Cleanup procedures
+
+- **[MEDIA_FILES_GUIDE.md](./MEDIA_FILES_GUIDE.md)** — Media management guide
+  - File organization
+  - Naming conventions
+  - Size optimization
+  - Storage quotas
 
 ---
+
+## 🔧 Troubleshooting & Support
+
+### Troubleshooting Guide
+- **[DEPLOYMENT_TROUBLESHOOTING.md](./DEPLOYMENT_TROUBLESHOOTING.md)** 🔧 — Complete troubleshooting
+  - Issue diagnosis flowchart
+  - 13+ common problems
+  - Step-by-step solutions
+  - Emergency recovery
+  - Diagnostic commands
+
+### Status & Verification
+- **[SETUP_COMPLETE.md](./SETUP_COMPLETE.md)** — Setup verification
+  - Checklist of completed steps
+  - Verification procedures
+  - Next steps guide
+
+---
+
+## 📋 Documentation Organization Matrix
+
+### By Role
+
+**New Developer**
+```
+1. GETTING_STARTED.md (Setup in 15 mins)
+2. PROJECT_STRUCTURE.md (Understand layout)
+3. README.md (Overview)
+4. QUICK_START_CMS.md (Try CMS)
+```
+
+**Backend Developer**
+```
+1. UPDATE_CORE.md (Core APIs)
+2. DATABASE_SETUP.md (Database)
+3. MEDIA_UPLOAD_IMPLEMENTATION.md (Files)
+4. PRODUCTION_COMPLETE_GUIDE.md (Deploy)
+```
+
+**Frontend Developer**
+```
+1. GETTING_STARTED.md (Setup)
+2. PROJECT_STRUCTURE.md (Components)
+3. UPDATE_CORE.md (API wiring)
+4. QUICK_START_CMS.md (Content)
+```
+
+**DevOps / Deployment**
+```
+1. PRODUCTION_CHECKLIST.md (Pre-launch)
+2. DOMAIN_QUICK_REFERENCE.md (Deploy quick)
+3. DOMAIN_SETUP.md (Full setup)
+4. DEPLOYMENT_TROUBLESHOOTING.md (Issues)
+```
+
+**Admin / Content Manager**
+```
+1. ADMIN_USAGE_GUIDE.md (Dashboard)
+2. QUICK_START_CMS.md (CMS basics)
+3. CMS_HOMEPAGE_GUIDE.md (Advanced)
+4. MEDIA_FILES_GUIDE.md (Media)
+```
+
+---
+
+## 🔗 Quick Links
+
+### Setup & Getting Started
+- [GETTING_STARTED.md](./GETTING_STARTED.md) — 15-minute setup
+- [README.md](./README.md) — Project overview
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) — Directory map
+
+### Implementation
+- [UPDATE_CORE.md](./UPDATE_CORE.md) — Core platform setup
+- [DATABASE_SETUP.md](./DATABASE_SETUP.md) — Database configuration
+- [QUICK_START_CMS.md](./QUICK_START_CMS.md) — CMS quickstart
+
+### Deployment
+- [DOMAIN_QUICK_REFERENCE.md](./DOMAIN_QUICK_REFERENCE.md) — 10-min deploy
+- [DOMAIN_SETUP.md](./DOMAIN_SETUP.md) — Complete setup
+- [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md) — Pre-launch
+
+### Troubleshooting
+- [DEPLOYMENT_TROUBLESHOOTING.md](./DEPLOYMENT_TROUBLESHOOTING.md) — Issue diagnosis
+- [DATABASE_SETUP.md](./DATABASE_SETUP.md) — DB issues
+
+---
+
+## 📖 Reading Recommendations
+
+### For First-Time Setup
+1. [GETTING_STARTED.md](./GETTING_STARTED.md) → 15 minutes
+2. [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) → 10 minutes
+3. Try the CMS → 5 minutes
+
+### For Production Deployment
+1. [PRODUCTION_CHECKLIST.md](./PRODUCTION_CHECKLIST.md) → Verify all items
+2. [DOMAIN_QUICK_REFERENCE.md](./DOMAIN_QUICK_REFERENCE.md) → Quick deploy OR
+3. [DOMAIN_SETUP.md](./DOMAIN_SETUP.md) → Detailed setup
+
+### For Troubleshooting
+1. [DEPLOYMENT_TROUBLESHOOTING.md](./DEPLOYMENT_TROUBLESHOOTING.md) → Find your issue
+2. Follow diagnostic steps
+3. Check specific guide if needed
+
+---
+
+## 🎯 Document Cross-Reference
 
 ## 📱 CMS Management
 

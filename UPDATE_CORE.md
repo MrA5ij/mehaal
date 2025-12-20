@@ -1,185 +1,202 @@
-1️⃣ platform_settings — DB SCHEMA (PostgreSQL)
+# Core Platform Update Guide
 
-File: backend/migrations/001_platform_settings.sql
+This document outlines the complete implementation process for integrating the Platform Settings system with the Frontend, CMS, and Admin Dashboard. Follow these steps in order to enable dynamic branding, typography, and animation configuration.
 
-CREATE TABLE platform_settings (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+---
 
-  -- BRAND COLORS
-  primary_color       VARCHAR(7)  NOT NULL,
-  background_color    VARCHAR(7)  NOT NULL,
-  foreground_color    VARCHAR(7)  NOT NULL,
-  muted_color         VARCHAR(7)  NOT NULL,
-  surface_color       VARCHAR(7)  NOT NULL,
+## 4. Database Seed — Platform Settings (One-Time Setup)
 
-  -- TYPOGRAPHY
-  heading_font        VARCHAR(128) NOT NULL,
-  body_font           VARCHAR(128) NOT NULL,
-  font_weights        JSONB        NOT NULL,
+**File:** `backend/seed/platform_settings_seed.py`
 
-  -- LOGO ASSETS (STATIC FILE PATHS)
-  logo_icon           TEXT NOT NULL,
-  logo_wordmark       TEXT NOT NULL,
-  logo_lockup         TEXT NOT NULL,
+This script initializes the default platform configuration in the database. It should only run once during initial deployment.
 
-  -- HERO SYSTEM (CORE)
-  hero_layout          VARCHAR(64) NOT NULL,
-  hero_visual_style    VARCHAR(64) NOT NULL,
-  hero_background      VARCHAR(64) NOT NULL,
-
-  hero_effects         JSONB NOT NULL,
-  hero_animation       JSONB NOT NULL,
-
-  -- MOTION
-  motion_profile       JSONB NOT NULL,
-
-  created_at TIMESTAMPTZ DEFAULT now(),
-  updated_at TIMESTAMPTZ DEFAULT now()
-);
-
--- SINGLE ROW ENFORCEMENT
-CREATE UNIQUE INDEX one_platform_settings_only
-ON platform_settings ((1));
-
-
-Rule: table main sirf aik row hogi.
-yeh founder-level global config hai.
-
-2️⃣ FastAPI — PLATFORM SETTINGS API (PRODUCTION)
-backend/models/platform_settings.py
-from sqlalchemy import Column, String, JSON
-from sqlalchemy.dialects.postgresql import UUID
-from app.database.base import Base
-import uuid
-
-class PlatformSettings(Base):
-    __tablename__ = "platform_settings"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-
-    primary_color = Column(String)
-    background_color = Column(String)
-    foreground_color = Column(String)
-    muted_color = Column(String)
-    surface_color = Column(String)
-
-    heading_font = Column(String)
-    body_font = Column(String)
-    font_weights = Column(JSON)
-
-    logo_icon = Column(String)
-    logo_wordmark = Column(String)
-    logo_lockup = Column(String)
-
-    hero_layout = Column(String)
-    hero_visual_style = Column(String)
-    hero_background = Column(String)
-
-    hero_effects = Column(JSON)
-    hero_animation = Column(JSON)
-
-    motion_profile = Column(JSON)
-
-backend/schemas/platform_settings.py
-from pydantic import BaseModel
-from typing import Dict, Any
-
-class PlatformSettingsOut(BaseModel):
-    colors: Dict[str, str]
-    typography: Dict[str, Any]
-    logo: Dict[str, str]
-    hero: Dict[str, Any]
-    motion: Dict[str, Any]
-
-backend/routes/platform_settings.py
-from fastapi import APIRouter, Depends
+```python
 from sqlalchemy.orm import Session
-from app.database.session import get_db
+from app.database.session import SessionLocal
 from app.models.platform_settings import PlatformSettings
-from app.schemas.platform_settings import PlatformSettingsOut
 
-router = APIRouter(prefix="/platform-settings", tags=["Platform Settings"])
+def seed():
+    """Initialize platform settings with default configuration."""
+    db: Session = SessionLocal()
 
-@router.get("", response_model=PlatformSettingsOut)
-def get_platform_settings(db: Session = Depends(get_db)):
-    ps = db.query(PlatformSettings).first()
+    # Check if settings already exist
+    exists = db.query(PlatformSettings).first()
+    if exists:
+        return
 
-    return {
-        "colors": {
-            "primary": ps.primary_color,
-            "background": ps.background_color,
-            "foreground": ps.foreground_color,
-            "muted": ps.muted_color,
-            "surface": ps.surface_color
+    # Create default platform settings
+    ps = PlatformSettings(
+        # Color palette
+        primary_color="#6666FF",
+        background_color="#000000",
+        foreground_color="#FFFFFF",
+        muted_color="#999999",
+        surface_color="#0B0B0F",
+
+        # Typography
+        heading_font="Cabinet Grotesk",
+        body_font="Cabinet Grotesk",
+        font_weights=["300", "400", "600", "700"],
+
+        # Brand assets
+        logo_icon="/assets/brand/icon.svg",
+        logo_wordmark="/assets/brand/wordmark.svg",
+        logo_lockup="/assets/brand/lockup.svg",
+
+        # Hero configuration
+        hero_layout="centered-display",
+        hero_visual_style="magnetic-field",
+        hero_background="dark-glass",
+
+        # Visual effects
+        hero_effects={
+            "glow": True,
+            "noise": True,
+            "depth": True
         },
-        "typography": {
-            "heading": ps.heading_font,
-            "body": ps.body_font,
-            "weights": ps.font_weights
+
+        # Animation presets
+        hero_animation={
+            "entry": "slow-fade-scale",
+            "idle": "subtle-float",
+            "cta": "soft-pulse"
         },
-        "logo": {
-            "icon": ps.logo_icon,
-            "wordmark": ps.logo_wordmark,
-            "lockup": ps.logo_lockup
-        },
-        "hero": {
-            "layout": ps.hero_layout,
-            "visual_style": ps.hero_visual_style,
-            "background": ps.hero_background,
-            "effects": ps.hero_effects,
-            "animation": ps.hero_animation
-        },
-        "motion": ps.motion_profile
-    }
 
+        # Motion profile
+        motion_profile={
+            "intensity": "low",
+            "easing": "easeOut",
+            "duration": "slow"
+        }
+    )
 
-Register in main.py:
+    db.add(ps)
+    db.commit()
+    db.close()
 
-app.include_router(platform_settings.router)
+if __name__ == "__main__":
+    seed()
+```
 
-3️⃣ Hero.tsx — PLATFORM SETTINGS + CMS RENDER
+**Execution:**
 
-File: frontend/components/Hero.tsx
+```bash
+python backend/seed/platform_settings_seed.py
+```
 
-type PlatformSettings = {
-  colors: any;
-  typography: any;
-  logo: any;
-  hero: any;
-  motion: any;
+**Note:** This script will only execute once. Subsequent runs will detect existing settings and exit gracefully.
+
+## 5. Frontend — Data Wiring (Platform + CMS)
+
+**File:** `src/lib/api.ts`
+
+These API functions retrieve the platform configuration and homepage CMS content from the backend. Both requests include cache-busting headers to ensure fresh data on each request.
+
+```typescript
+export async function getPlatformSettings() {
+  const res = await fetch("/api/platform-settings", { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch platform settings");
+  return res.json();
+}
+
+export async function getHomeCMS() {
+  const res = await fetch("/api/cms/home", { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to fetch home page content");
+  return res.json();
+}
+```
+
+**Usage:** These functions are consumed by the main landing page component to populate both styling and content dynamically.
+
+## 6. Landing Page — Final Integration (Production)
+
+**File:** `src/app/page.tsx`
+
+This is the main landing page component that integrates both platform settings and CMS content. Data is fetched concurrently for optimal performance.
+
+```typescript
+import Hero from "@/components/Hero";
+import { getPlatformSettings, getHomeCMS } from "@/lib/api";
+
+export default async function Page() {
+  // Fetch platform configuration and content in parallel
+  const [platform, content] = await Promise.all([
+    getPlatformSettings(),
+    getHomeCMS()
+  ]);
+
+  return <Hero platform={platform} content={content} />;
+}
+```
+
+**Benefits:**
+- Parallel data fetching reduces load time
+- Clean separation of concerns (layout vs. components)
+- Server-side rendering for optimal SEO and performance
+
+## 7. Motion Engine — Animation Presets (React Spring)
+
+**File:** `src/theme/motion.ts`
+
+This module defines reusable animation presets that are referenced in the platform settings. Each preset is configured with specific easing and spring physics parameters.
+
+```typescript
+export const motionPresets = {
+  "slow-fade-scale": {
+    from: { opacity: 0, transform: "scale(0.98)" },
+    to: { opacity: 1, transform: "scale(1)" },
+    config: { tension: 80, friction: 20 }
+  },
+  "subtle-float": {
+    loop: true,
+    from: { transform: "translateY(0px)" },
+    to: { transform: "translateY(-6px)" },
+    config: { duration: 4000 }
+  },
+  "soft-pulse": {
+    loop: true,
+    from: { opacity: 0.9 },
+    to: { opacity: 1 },
+    config: { duration: 1800 }
+  }
 };
+```
 
-type HeroCMS = {
-  headline: string;
-  subheadline: string;
-  cta_primary: string;
-  cta_secondary: string;
-};
+**Configuration:**
+- `slow-fade-scale` — Entry animation with fade and scale effect
+- `subtle-float` — Continuous subtle vertical movement
+- `soft-pulse` — Gentle opacity pulsing effect
 
-export default function Hero({
-  platform,
-  content,
-}: {
-  platform: PlatformSettings;
-  content: HeroCMS;
-}) {
+These presets are dynamically applied based on the platform settings configuration.
+
+## 8. Hero Component — Motion Binding (Production)
+
+**File:** `src/components/Hero.tsx`
+
+The Hero component is the core landing page element. It applies platform-specific styling, typography, and animations to create a fully branded, dynamic experience.
+
+```typescript
+import { animated, useSpring } from "@react-spring/web";
+import { motionPresets } from "@/theme/motion";
+
+export default function Hero({ platform, content }: any) {
+  // Apply entry animation from platform settings
+  const entry = useSpring(motionPresets[platform.hero.animation.entry]);
+
   return (
-    <section
+    <animated.section
       style={{
+        ...entry,
         backgroundColor: platform.colors.background,
         color: platform.colors.foreground,
-        fontFamily: platform.typography.heading,
+        fontFamily: platform.typography.heading
       }}
       className="min-h-screen flex flex-col items-center justify-center text-center"
     >
-      <h1 className="text-6xl font-semibold mb-6">
-        {content.headline}
-      </h1>
-
+      <h1 className="text-6xl font-semibold mb-6">{content.headline}</h1>
       <p className="max-w-2xl text-lg opacity-70 mb-10">
         {content.subheadline}
       </p>
-
       <div className="flex gap-4">
         <button
           style={{ backgroundColor: platform.colors.primary }}
@@ -191,52 +208,71 @@ export default function Hero({
           {content.cta_secondary}
         </button>
       </div>
-    </section>
+    </animated.section>
   );
 }
+```
 
-4️⃣ FOUNDER SETTINGS — ADMIN UI (REAL, NOT DEMO)
+**Features:**
+- Dynamically applies platform colors and typography
+- Uses motion presets for smooth entry animations
+- Renders CMS content (headline, subheadline, CTAs)
+- Fully responsive layout
+- Accessible button components
 
-File: frontend/admin/PlatformSettings.tsx
+## 9. Admin Dashboard — Settings Update API
 
-export default function PlatformSettingsAdmin() {
-  return (
-    <div className="max-w-4xl mx-auto p-10">
-      <h1 className="text-3xl font-semibold mb-8">
-        Platform Settings (Founder)
-      </h1>
+**File:** `backend/app/routes/platform_settings.py`
 
-      <section className="space-y-6">
-        <h2 className="text-xl font-medium">Brand Colors</h2>
-        <input type="color" />
-        <input type="color" />
-      </section>
+The PUT endpoint allows administrators to update platform settings dynamically. All changes are persisted to the database immediately.
 
-      <section className="space-y-6 mt-10">
-        <h2 className="text-xl font-medium">Typography</h2>
-        <select>
-          <option>Cabinet Grotesk</option>
-        </select>
-      </section>
+```python
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from app.database import get_db
+from app.models.platform_settings import PlatformSettings
+from app.schemas.platform_settings import PlatformSettingsOut
 
-      <section className="space-y-6 mt-10">
-        <h2 className="text-xl font-medium">Hero System</h2>
-        <select>
-          <option>centered-display</option>
-        </select>
-        <select>
-          <option>magnetic-field</option>
-        </select>
-      </section>
+router = APIRouter(prefix="/api/platform-settings", tags=["platform"])
 
-      <button className="mt-10 px-6 py-3 bg-black text-white">
-        Save Platform Settings
-      </button>
-    </div>
-  );
+@router.put("", response_model=PlatformSettingsOut)
+def update_platform_settings(payload: dict, db: Session = Depends(get_db)):
+    """
+    Update platform settings.
+    
+    Args:
+        payload: Dictionary of settings to update
+        db: Database session
+        
+    Returns:
+        Updated platform settings object
+    """
+    ps = db.query(PlatformSettings).first()
+    
+    # Update all provided fields
+    for key, value in payload.items():
+        setattr(ps, key, value)
+    
+    db.commit()
+    db.refresh(ps)
+    
+    return ps
+```
+
+**Frontend Integration:**
+
+```typescript
+// src/admin/PlatformSettingsAdmin.tsx
+async function savePlatformSettings(settings: any) {
+  const response = await fetch("/api/platform-settings", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(settings)
+  });
+  
+  if (!response.ok) throw new Error("Failed to save settings");
+  return response.json();
 }
+```
 
-
-Access rule:
-/admin/platform-settings
-Founder only. No CMS editors.
+**Note:** Changes made through the admin dashboard are immediately reflected on the live website.
