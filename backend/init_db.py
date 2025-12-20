@@ -1,7 +1,7 @@
 """Production database initialization script"""
 import os
 from sqlalchemy import create_engine, text
-from sqlalchemy.pool import NullPool
+from sqlalchemy.pool import NullPool, StaticPool
 from app.models import Base
 
 def init_production_db():
@@ -9,15 +9,25 @@ def init_production_db():
     
     database_url = os.getenv(
         "DATABASE_URL",
-        "postgresql://mehaal_user:mehaal_password@postgres:5432/mehaal_db"
+        "sqlite:///./test.db"
     )
     
     # Production engine without connection pooling (handled by nginx/load balancer)
-    engine = create_engine(
-        database_url,
-        poolclass=NullPool,
-        echo=False,
-    )
+    if database_url.startswith("sqlite"):
+        engine = create_engine(
+            database_url,
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+            echo=False,
+        )
+    else:
+        engine = create_engine(
+            database_url,
+            poolclass=NullPool,
+            pool_pre_ping=True,
+            pool_recycle=3600,
+            echo=False,
+        )
     
     # Create all tables
     Base.metadata.create_all(bind=engine)
@@ -51,7 +61,7 @@ def init_production_db():
         # Features
         conn.execute(text("""
             CREATE INDEX IF NOT EXISTS idx_features_order 
-            ON features(order);
+            ON features("order");
         """))
         
         # Media
@@ -69,21 +79,43 @@ def init_production_db():
         # Insert default platform settings if not exists
         conn.execute(text("""
             INSERT INTO platform_settings (
+                id,
                 primary_color,
                 background_color,
                 foreground_color,
                 muted_color,
                 surface_color,
                 heading_font,
-                body_font
+                body_font,
+                font_weights,
+                logo_icon,
+                logo_wordmark,
+                logo_lockup,
+                hero_layout,
+                hero_visual_style,
+                hero_background,
+                hero_effects,
+                hero_animation,
+                motion_profile
             ) VALUES (
+                '550e8400-e29b-41d4-a716-446655440000',
                 '#6366F1',
                 '#FFFFFF',
                 '#0F172A',
                 '#64748B',
                 '#F8FAFC',
                 'Cabinet Grotesk',
-                'Inter'
+                'Inter',
+                '{"heading": 600, "body": 400, "bold": 700}',
+                '/assets/logo-icon.svg',
+                '/assets/logo-wordmark.svg',
+                '/assets/logo-lockup.svg',
+                'centered-display',
+                'magnetic-field',
+                'gradient-mesh',
+                '{"blur": true, "glow": true, "noise": false}',
+                '{"type": "fade-up", "duration": 800, "stagger": 100}',
+                '{"spring": {"tension": 170, "friction": 26}, "ease": "easeOutCubic"}'
             )
             ON CONFLICT DO NOTHING;
         """))

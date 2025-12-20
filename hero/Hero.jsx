@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSpring, animated, config } from '@react-spring/web';
 import { heroTheme } from './hero.theme';
 import { heroLayout } from './hero.layout';
 import { heroMotion } from './hero.motion';
 import { getPlatformSettings, getHomePageCMS } from '../src/lib/api';
 import { motionPresets } from '../src/theme/motion';
+import HeroBackground3D from './HeroBackground3D';
 import './Hero.css';
 
 const Hero = () => {
@@ -103,6 +104,18 @@ const Hero = () => {
 
   return (
     <animated.div style={{ ...fadeInSpring, ...styleOverrides }} className="hero-wrapper">
+      {/* 3D Hero Background - Conditional rendering based on settings */}
+      <div className="hero-3d-container" style={{ opacity: platformSettings?.hero?.effects?.glow ? 1 : 0.3 }}>
+        <Suspense fallback={null}>
+          <HeroBackground3D
+            intensity={platformSettings?.hero?.effects?.glow ? 0.6 : 0.2}
+            color={platformSettings?.colors?.primary || '#6666FF'}
+            enableRotation={platformSettings?.hero?.effects?.rotate !== false}
+            rotationSpeed={0.25}
+          />
+        </Suspense>
+      </div>
+
       {/* Background layers */}
       <div className="hero-background">
         {/* Base dark surface */}

@@ -1,278 +1,143 @@
-# Core Platform Update Guide
+🔟 HERO 3D VISUAL LAYER (THREE.JS / REACT-THREE-FIBER)
 
-This document outlines the complete implementation process for integrating the Platform Settings system with the Frontend, CMS, and Admin Dashboard. Follow these steps in order to enable dynamic branding, typography, and animation configuration.
+Purpose: tumhari brand identity ke mutabiq depth + magnetic glow — billboard-style, non-noisy.
 
----
+Install
+npm i three @react-three/fiber @react-three/drei
 
-## 4. Database Seed — Platform Settings (One-Time Setup)
+frontend/components/HeroBackground3D.tsx
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
 
-**File:** `backend/seed/platform_settings_seed.py`
-
-This script initializes the default platform configuration in the database. It should only run once during initial deployment.
-
-```python
-from sqlalchemy.orm import Session
-from app.database.session import SessionLocal
-from app.models.platform_settings import PlatformSettings
-
-def seed():
-    """Initialize platform settings with default configuration."""
-    db: Session = SessionLocal()
-
-    # Check if settings already exist
-    exists = db.query(PlatformSettings).first()
-    if exists:
-        return
-
-    # Create default platform settings
-    ps = PlatformSettings(
-        # Color palette
-        primary_color="#6666FF",
-        background_color="#000000",
-        foreground_color="#FFFFFF",
-        muted_color="#999999",
-        surface_color="#0B0B0F",
-
-        # Typography
-        heading_font="Cabinet Grotesk",
-        body_font="Cabinet Grotesk",
-        font_weights=["300", "400", "600", "700"],
-
-        # Brand assets
-        logo_icon="/assets/brand/icon.svg",
-        logo_wordmark="/assets/brand/wordmark.svg",
-        logo_lockup="/assets/brand/lockup.svg",
-
-        # Hero configuration
-        hero_layout="centered-display",
-        hero_visual_style="magnetic-field",
-        hero_background="dark-glass",
-
-        # Visual effects
-        hero_effects={
-            "glow": True,
-            "noise": True,
-            "depth": True
-        },
-
-        # Animation presets
-        hero_animation={
-            "entry": "slow-fade-scale",
-            "idle": "subtle-float",
-            "cta": "soft-pulse"
-        },
-
-        # Motion profile
-        motion_profile={
-            "intensity": "low",
-            "easing": "easeOut",
-            "duration": "slow"
-        }
-    )
-
-    db.add(ps)
-    db.commit()
-    db.close()
-
-if __name__ == "__main__":
-    seed()
-```
-
-**Execution:**
-
-```bash
-python backend/seed/platform_settings_seed.py
-```
-
-**Note:** This script will only execute once. Subsequent runs will detect existing settings and exit gracefully.
-
-## 5. Frontend — Data Wiring (Platform + CMS)
-
-**File:** `src/lib/api.ts`
-
-These API functions retrieve the platform configuration and homepage CMS content from the backend. Both requests include cache-busting headers to ensure fresh data on each request.
-
-```typescript
-export async function getPlatformSettings() {
-  const res = await fetch("/api/platform-settings", { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch platform settings");
-  return res.json();
-}
-
-export async function getHomeCMS() {
-  const res = await fetch("/api/cms/home", { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to fetch home page content");
-  return res.json();
-}
-```
-
-**Usage:** These functions are consumed by the main landing page component to populate both styling and content dynamically.
-
-## 6. Landing Page — Final Integration (Production)
-
-**File:** `src/app/page.tsx`
-
-This is the main landing page component that integrates both platform settings and CMS content. Data is fetched concurrently for optimal performance.
-
-```typescript
-import Hero from "@/components/Hero";
-import { getPlatformSettings, getHomeCMS } from "@/lib/api";
-
-export default async function Page() {
-  // Fetch platform configuration and content in parallel
-  const [platform, content] = await Promise.all([
-    getPlatformSettings(),
-    getHomeCMS()
-  ]);
-
-  return <Hero platform={platform} content={content} />;
-}
-```
-
-**Benefits:**
-- Parallel data fetching reduces load time
-- Clean separation of concerns (layout vs. components)
-- Server-side rendering for optimal SEO and performance
-
-## 7. Motion Engine — Animation Presets (React Spring)
-
-**File:** `src/theme/motion.ts`
-
-This module defines reusable animation presets that are referenced in the platform settings. Each preset is configured with specific easing and spring physics parameters.
-
-```typescript
-export const motionPresets = {
-  "slow-fade-scale": {
-    from: { opacity: 0, transform: "scale(0.98)" },
-    to: { opacity: 1, transform: "scale(1)" },
-    config: { tension: 80, friction: 20 }
-  },
-  "subtle-float": {
-    loop: true,
-    from: { transform: "translateY(0px)" },
-    to: { transform: "translateY(-6px)" },
-    config: { duration: 4000 }
-  },
-  "soft-pulse": {
-    loop: true,
-    from: { opacity: 0.9 },
-    to: { opacity: 1 },
-    config: { duration: 1800 }
-  }
-};
-```
-
-**Configuration:**
-- `slow-fade-scale` — Entry animation with fade and scale effect
-- `subtle-float` — Continuous subtle vertical movement
-- `soft-pulse` — Gentle opacity pulsing effect
-
-These presets are dynamically applied based on the platform settings configuration.
-
-## 8. Hero Component — Motion Binding (Production)
-
-**File:** `src/components/Hero.tsx`
-
-The Hero component is the core landing page element. It applies platform-specific styling, typography, and animations to create a fully branded, dynamic experience.
-
-```typescript
-import { animated, useSpring } from "@react-spring/web";
-import { motionPresets } from "@/theme/motion";
-
-export default function Hero({ platform, content }: any) {
-  // Apply entry animation from platform settings
-  const entry = useSpring(motionPresets[platform.hero.animation.entry]);
-
+export default function HeroBackground3D({ intensity = 0.4 }: { intensity?: number }) {
   return (
-    <animated.section
-      style={{
-        ...entry,
-        backgroundColor: platform.colors.background,
-        color: platform.colors.foreground,
-        fontFamily: platform.typography.heading
-      }}
-      className="min-h-screen flex flex-col items-center justify-center text-center"
+    <Canvas
+      camera={{ position: [0, 0, 6], fov: 50 }}
+      style={{ position: "absolute", inset: 0, zIndex: 0 }}
     >
-      <h1 className="text-6xl font-semibold mb-6">{content.headline}</h1>
-      <p className="max-w-2xl text-lg opacity-70 mb-10">
-        {content.subheadline}
-      </p>
-      <div className="flex gap-4">
-        <button
-          style={{ backgroundColor: platform.colors.primary }}
-          className="px-6 py-3 rounded-lg"
-        >
-          {content.cta_primary}
-        </button>
-        <button className="px-6 py-3 border rounded-lg">
-          {content.cta_secondary}
-        </button>
-      </div>
-    </animated.section>
+      <ambientLight intensity={0.4} />
+      <pointLight position={[4, 4, 4]} intensity={1.2} />
+      <mesh>
+        <torusGeometry args={[1.6, 0.18, 64, 200]} />
+        <meshStandardMaterial
+          color="#6666FF"
+          emissive="#6666FF"
+          emissiveIntensity={intensity}
+          roughness={0.2}
+          metalness={0.6}
+        />
+      </mesh>
+      <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.25} />
+    </Canvas>
   );
 }
-```
 
-**Features:**
-- Dynamically applies platform colors and typography
-- Uses motion presets for smooth entry animations
-- Renders CMS content (headline, subheadline, CTAs)
-- Fully responsive layout
-- Accessible button components
+Bind in Hero.tsx
+import HeroBackground3D from "./HeroBackground3D";
 
-## 9. Admin Dashboard — Settings Update API
+export default function Hero({ platform, content }: any) {
+  return (
+    <section
+      style={{ backgroundColor: platform.colors.background, color: platform.colors.foreground }}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      <HeroBackground3D intensity={platform.hero.effects.glow ? 0.6 : 0.2} />
 
-**File:** `backend/app/routes/platform_settings.py`
-
-The PUT endpoint allows administrators to update platform settings dynamically. All changes are persisted to the database immediately.
-
-```python
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models.platform_settings import PlatformSettings
-from app.schemas.platform_settings import PlatformSettingsOut
-
-router = APIRouter(prefix="/api/platform-settings", tags=["platform"])
-
-@router.put("", response_model=PlatformSettingsOut)
-def update_platform_settings(payload: dict, db: Session = Depends(get_db)):
-    """
-    Update platform settings.
-    
-    Args:
-        payload: Dictionary of settings to update
-        db: Database session
-        
-    Returns:
-        Updated platform settings object
-    """
-    ps = db.query(PlatformSettings).first()
-    
-    # Update all provided fields
-    for key, value in payload.items():
-        setattr(ps, key, value)
-    
-    db.commit()
-    db.refresh(ps)
-    
-    return ps
-```
-
-**Frontend Integration:**
-
-```typescript
-// src/admin/PlatformSettingsAdmin.tsx
-async function savePlatformSettings(settings: any) {
-  const response = await fetch("/api/platform-settings", {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(settings)
-  });
-  
-  if (!response.ok) throw new Error("Failed to save settings");
-  return response.json();
+      <div className="relative z-10 text-center px-6">
+        <h1 className="text-6xl font-semibold mb-6">{content.headline}</h1>
+        <p className="max-w-2xl mx-auto text-lg opacity-70 mb-10">
+          {content.subheadline}
+        </p>
+        <div className="flex justify-center gap-4">
+          <button style={{ background: platform.colors.primary }} className="px-6 py-3 rounded-lg">
+            {content.cta_primary}
+          </button>
+          <button className="px-6 py-3 border rounded-lg">
+            {content.cta_secondary}
+          </button>
+        </div>
+      </div>
+    </section>
+  );
 }
-```
 
-**Note:** Changes made through the admin dashboard are immediately reflected on the live website.
+1️⃣1️⃣ ADMIN HARDENING (FOUNDER-ONLY, ENTERPRISE)
+Access Control (FastAPI dependency)
+
+backend/core/auth.py
+
+from fastapi import Header, HTTPException
+
+def founder_only(x_platform_key: str = Header(None)):
+    if x_platform_key != "FOUNDATION_KEY":
+        raise HTTPException(status_code=403, detail="Founder only")
+
+
+Apply to routes:
+
+@router.put("", dependencies=[Depends(founder_only)])
+def update_platform_settings(...):
+    ...
+
+
+Frontend admin sends header:
+
+fetch("/api/platform-settings", {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    "X-Platform-Key": process.env.NEXT_PUBLIC_FOUNDER_KEY!
+  },
+  body: JSON.stringify(payload)
+});
+
+1️⃣2️⃣ VERSIONING + ROLLBACK (ENTERPRISE MUST)
+DB add-on
+ALTER TABLE platform_settings
+ADD COLUMN version INT DEFAULT 1;
+
+
+On update:
+
+increment version
+
+log previous row to platform_settings_history
+
+1️⃣3️⃣ PROD CONFIG (NO SURPRISES)
+Env
+NEXT_PUBLIC_FOUNDER_KEY=********
+NEXT_PUBLIC_CMS_URL=https://cms.mehaal.ai
+
+CDN
+
+Cache /platform-settings for 60s
+
+Cache CMS home for 30s
+
+Bypass cache on admin save
+
+1️⃣4️⃣ QUALITY GATES (LAUNCH CHECKLIST)
+
+ Brand tokens locked
+
+ Hero renders without CMS outage
+
+ Founder panel protected
+
+ Animations preset-driven
+
+ 3D layer optional & degradable
+
+ No CMS can break layout
+
+1️⃣5️⃣ WHAT YOU HAVE NOW
+
+Founder-controlled brand engine
+
+CMS-driven content
+
+3D hero matching brand identity
+
+Enterprise controls (auth, versioning)
+
+Production-ready landing

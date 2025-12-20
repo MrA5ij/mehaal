@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
+from sqlalchemy.pool import StaticPool, NullPool
 import os
 from dotenv import load_dotenv
 
@@ -17,6 +17,7 @@ if DATABASE_URL.startswith("sqlite"):
 else:
     engine = create_engine(
         DATABASE_URL,
+        poolclass=NullPool, # Use NullPool for non-SQLite databases
         pool_pre_ping=True,
         pool_recycle=3600,
     )

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, JSON, DateTime, text
+from sqlalchemy import Column, String, JSON, DateTime, Integer, text
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
 import uuid
@@ -37,6 +37,9 @@ class PlatformSettings(Base):
 
     # Motion Profile
     motion_profile = Column(JSON, nullable=False, default={"spring": {"tension": 170, "friction": 26}, "ease": "easeOutCubic"})
+
+    # Versioning & Rollback
+    version = Column(Integer, default=1, nullable=False)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
