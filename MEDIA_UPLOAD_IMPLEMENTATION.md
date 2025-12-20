@@ -1,8 +1,8 @@
-# Media Upload Implementation - Step by Step
+# Media Upload Implementation - Local Storage
 
 ## 🎯 Goal
 
-Logo اور دوسری media files کو صحیح طریقے سے upload اور manage کریں۔
+Logo, SVG, GLB اور دوسری media files کو **اپنی مرضی کی جگہ** upload اور manage کریں۔
 
 ---
 
@@ -12,12 +12,11 @@ Logo اور دوسری media files کو صحیح طریقے سے upload اور m
 ✅ Media table موجود ہے
 ✅ Media API endpoints ہیں
 ❌ File upload functionality نہیں ہے
-❌ Cloudinary integration نہیں ہے
 ```
 
 ---
 
-## Option 1: Local File Upload (Simple)
+## Local File Upload - Full Control
 
 ### Step 1: Backend - Media Upload Endpoint
 
@@ -29,9 +28,9 @@ import os
 import shutil
 from datetime import datetime
 
-UPLOAD_DIR = "uploads"
-ALLOWED_EXTENSIONS = {'.svg', '.png', '.jpg', '.jpeg', '.gif', '.webp'}
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+UPLOAD_DIR = "uploads"  # آپ کی مرضی کی directory
+ALLOWED_EXTENSIONS = {'.svg', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.glb', '.gltf'}  # 3D models included
+MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB - GLB files کے لیے
 
 # Create upload dir if not exists
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -69,10 +68,18 @@ async def upload_media(
     with open(filepath, "wb") as f:
         f.write(contents)
     
+    # Determine file type
+    if ext in {'.svg', '.png', '.jpg', '.jpeg', '.gif', '.webp'}:
+        file_type = "image"
+    elif ext in {'.glb', '.gltf'}:
+        file_type = "3d_model"
+    else:
+        file_type = "file"
+    
     # Save to database
     db_media = Media(
         file_url=f"/uploads/{filename}",
-        file_type="image" if ext in {'.svg', '.png', '.jpg', '.jpeg', '.gif', '.webp'} else "file",
+        file_type=file_type,
         alt_text=alt_text or file.filename,
         size=len(contents)
     )
@@ -243,37 +250,16 @@ export default function PlatformSettingsAdmin() {
             )}
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-```
+   Custom Upload Directory
 
----
-
-## Option 2: Cloudinary Integration (Recommended)
-
-### Step 1: Setup Cloudinary Account
-
-```
-1. https://cloudinary.com/users/register/free پر جائیں
-2. Account create کریں
-3. Dashboard میں API Key اور Secret لیں
-```
-
-### Step 2: Backend Setup
-
-```bash
-# requirements.txt میں add کریں
-cloudinary==1.35.0
-python-dotenv==1.0.0
-```
+آپ اپنی مرضی کی directory set کر سکتے ہیں:
 
 ```python
-# backend/.env میں add کریں
-CLOUDINARY_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_secret
+# backend/.env میں
+UPLOAD_DIR=/var/www/mehaal/assets/uploads
+# یا
+UPLOAD_DIR=/mnt/storage/media
+# یا کوئی بھی path
 ```
 
 ```python
@@ -284,73 +270,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Settings:
-    CLOUDINARY_NAME = os.getenv("CLOUDINARY_NAME")
-    CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
-    CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
-
+    UPLOAD_DIR = os.getenv("UPLOAD_DIR", "uploads")  # Default: uploads
+    
 settings = Settings()
 ```
 
-### Step 3: Upload Endpoint
-
 ```python
-# backend/app/routes/media.py میں
-
-import cloudinary
-import cloudinary.uploader
+# backend/app/routes/media.py میں UPLOAD_DIR use کریں
 from app.config import settings
 
-# Configure Cloudinary
-cloudinary.config(
-    cloud_name=settings.CLOUDINARY_NAME,
-    api_key=settings.CLOUDINARY_API_KEY,
-    api_secret=settings.CLOUDINARY_API_SECRET
-)
-
-@router.post("/upload-cloudinary")
-async def upload_to_cloudinary(
-    file: UploadFile = File(...),
-    alt_text: str = "",
-    db: Session = Depends(get_db)
-):
-    """Upload file to Cloudinary"""
-    
-    try:
-        # Upload to Cloudinary
-        result = cloudinary.uploader.upload(
-            file.file,
-            resource_type="auto",
-            folder="mehaal",
-            public_id=f"{file.filename[:-4]}_{int(datetime.now().timestamp())}"
-        )
-        
-        # Save to database
-        db_media = Media(
-            file_url=result['secure_url'],
-            file_type="image",
-            alt_text=alt_text or file.filename,
-            size=result.get('bytes', 0)
-        )
-        db.add(db_media)
-        db.commit()
-        db.refresh(db_media)
-        
-        return {
-            "id": db_media.id,
-            "file_url": db_media.file_url,
-            "file_type": db_media.file_type,
-            "alt_text": db_media.alt_text,
-            "size": db_media.size,
-            "cloudinary_id": result.get('public_id')
-        }
-    
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-```
-
-### Step 4: Frontend (Same as Option 1)
-
-```tsx
+UPLOAD_DIR = settings.UPLOAD_DIR
+os.makedirs(UPLOAD_DIR, exist_ok=True)`tsx
 // URL change کریں
 const response = await fetch(
   import.meta.env.VITE_API_URL + '/api/media/upload-cloudinary',
@@ -591,3 +521,13 @@ chmod 644 uploads/*
 ---
 
 **Choose:** Local files for now, upgrade to Cloudinary when scaling!
+✅ **Local file storage - آپ کی مرضی کی جگہ**
+- SVG, PNG, JPG, WebP images
+- GLB, GLTF 3D models
+- کوئی بھی directory set کر سکتے ہیں
+- کوئی third-party service نہیں
+- مکمل control آپ کے پاس
+
+---
+
+**Simple. Local. Full Control.**

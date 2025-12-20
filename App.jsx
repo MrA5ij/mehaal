@@ -1,12 +1,24 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Hero from './hero/Hero';
+import HomePageEditor from './src/admin/HomePageEditor';
+import PlatformSettingsAdmin from './src/admin/PlatformSettingsAdmin';
 import './App.css';
 
 function App() {
   return (
-    <div className="app">
-      <Hero />
-    </div>
+    <BrowserRouter>
+      <div className="app">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Hero />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/home-page" element={<HomePageEditor />} />
+          <Route path="/admin/platform-settings" element={<PlatformSettingsAdmin />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
