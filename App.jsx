@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Hero from './hero/Hero';
-import AdminLayout from './src/admin/AdminLayout.tsx';
-import Dashboard from './src/admin/Dashboard.tsx';
-import HomePageEditor from './src/admin/HomePageEditor.tsx';
-import PlatformSettingsAdmin from './src/admin/PlatformSettingsAdmin.tsx';
+import AdminLayout from './src/admin/AdminLayout';
+import Dashboard from './src/admin/Dashboard';
+import HomePageEditor from './src/admin/HomePageEditor';
+import PlatformSettingsAdmin from './src/admin/PlatformSettingsAdmin';
 import './App.css';
 
 function App() {
