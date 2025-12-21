@@ -1,3 +1,5 @@
+
+
 services:
   postgres:
     image: postgres:15-alpine
@@ -6,12 +8,7 @@ services:
       POSTGRES_USER: mehaal_user
       POSTGRES_PASSWORD: mehaal_password
       POSTGRES_DB: mehaal_db
-    command: 
-      - "postgres"
-      - "-c"
-      - "max_connections=100"
-      - "-c"
-      - "shared_buffers=256MB"
+      POSTGRES_INITDB_ARGS: "-c max_connections=100 -c shared_buffers=256MB"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -58,7 +55,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://mehaal_user:mehaal_password@postgres:5432/mehaal_db
       - DEBUG=True
-      - ENVIRONMENT=development
+      - APP_ENV=development
       - CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:8000
       - LOG_LEVEL=info
     volumes:
@@ -85,8 +82,13 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - NODE_ENV=production
+
+      - NODE_ENV=development
       - VITE_API_URL=http://localhost:8000
+    volumes:
+      - .:/app
+
+      - /app/node_modules
     restart: unless-stopped
     depends_on:
       - backend

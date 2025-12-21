@@ -172,7 +172,10 @@ DB_NAME=mehaal_db
 # FastAPI
 DEBUG=False
 ENVIRONMENT=production
-SECRET_KEY=random_secret_key_here  # Generate: openssl rand -hex 32
+APP_ENV=prod
+FOUNDER_KEY=$(openssl rand -hex 48)
+JWT_SECRET=$(openssl rand -hex 64)
+SSO_METADATA_URL=https://idp.example.com/sso/metadata  # replace with IdP metadata endpoint
 
 # CORS
 CORS_ORIGINS=["https://yourdomain.com"]

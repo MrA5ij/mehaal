@@ -158,7 +158,9 @@ Since Hyperlift provides VM access, deploy both frontend and backend on Spaceshi
 - Set environment variables in Hyperlift dashboard:
   - DATABASE_URL=sqlite:///./mehaal.db
   - CORS_ORIGINS=https://mehaal.tech,https://dashboard.mehaal.tech
-  - SECRET_KEY=your-key
+  - JWT_SECRET=$(openssl rand -hex 64)
+  - FOUNDER_KEY=$(openssl rand -hex 48)
+  - SSO_METADATA_URL=https://idp.example.com/sso/metadata  # replace with your live IdP metadata endpoint
   - APPLICATION_PORT=8080
 - Run: `docker build -t mehaal-backend . && docker run -d -p 8080:8080 mehaal-backend`
 - API URL: https://mehaal.tech/api (or subdomain)

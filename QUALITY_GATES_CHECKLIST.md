@@ -56,6 +56,9 @@
 - [ ] CORS configured for production domain only
 - [ ] SQL injection prevention (SQLAlchemy ORM)
 - [ ] Rate limiting on admin endpoints (10/min)
+- [ ] APP_ENV matches activated virtualenv (venv.<env>)
+- [ ] Env guard passes with no runtime overrides
+- [ ] SSO_METADATA_URL verified against IdP change log
 
 ### ✅ Performance & Reliability
 - [ ] API latency < 200ms (p95)
@@ -70,6 +73,8 @@
 - [ ] Database backups configured
 - [ ] Rollback procedure documented & tested
 - [ ] Monitoring/logging in place
+- [ ] `.env.<env>` files synced with deployment secrets
+- [ ] JWT secrets rotated pre-launch
 
 ### ✅ Documentation
 - [ ] PRODUCTION_CONFIG.md complete

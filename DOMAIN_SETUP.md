@@ -147,7 +147,7 @@ VITE_ENABLE_ANALYTICS=true
 ### Backend `.env.prod` کو اپڈیٹ کریں
 
 ```bash
-# backend/.env.prod
+# Mehaal.Backend/.env.prod
 
 # Database
 DATABASE_URL=postgresql://mehaal_user:STRONG_PASSWORD@postgres:5432/mehaal_db
@@ -270,7 +270,7 @@ sed -i 's/yourdomain.com/your-actual-domain.com/g' nginx.conf
 
 ```bash
 # Backend
-cp backend/.env.example backend/.env.prod
+cp Mehaal.Backend/.env.example Mehaal.Backend/.env.prod
 # .env.prod میں اپنے values ڈالیں
 
 # Frontend

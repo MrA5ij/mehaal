@@ -43,7 +43,7 @@ sudo certbot certonly --standalone \
 |------|--------|
 | `nginx.conf` | Domain ڈالیں: `yourdomain.com` |
 | `.env.production` | API URL: `https://api.yourdomain.com` |
-| `backend/.env.prod` | ALLOWED_HOSTS, CORS_ORIGINS |
+| `Mehaal.Backend/.env.prod` | ALLOWED_HOSTS, CORS_ORIGINS |
 
 ---
 

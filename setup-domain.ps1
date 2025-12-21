@@ -28,12 +28,11 @@ function Test-PasswordStrength($password) {
     return $true
 }
 
-function Generate-SecretKey {
-    $bytes = New-Object byte[] 32
+function Generate-HexString($byteLength) {
+    $bytes = New-Object byte[] $byteLength
     $random = New-Object System.Security.Cryptography.RNGCryptoServiceProvider
     $random.GetBytes($bytes)
-    $key = [System.Convert]::ToBase64String($bytes)
-    return $key
+    ($bytes | ForEach-Object { $_.ToString("x2") }) -join ""
 }
 
 function Create-NginxConfig($domain, $configPath) {
@@ -51,14 +50,15 @@ function Create-NginxConfig($domain, $configPath) {
     Write-ColorOutput "Green" "✓ nginx.conf created for $domain"
 }
 
-function Create-BackendEnv($domain, $dbPassword, $secretKey, $email) {
+function Create-BackendEnv($domain, $dbPassword, $jwtSecret, $founderKey, $ssoMetadataUrl, $email) {
     $envContent = @"
 # Database
-DATABASE_URL=postgresql://mehaal_user:${dbPassword}@postgres:5432/mehaal_db
+DATABASE_URL=postgresql+psycopg://mehaal_user:${dbPassword}@postgres:5432/mehaal_db
 DATABASE_POOL_SIZE=20
 DATABASE_MAX_OVERFLOW=40
 
 # Environment
+APP_ENV=prod
 DEBUG=False
 ENVIRONMENT=production
 
@@ -66,7 +66,9 @@ ENVIRONMENT=production
 CORS_ORIGINS=["https://${domain}","https://www.${domain}"]
 
 # Security
-SECRET_KEY=${secretKey}
+FOUNDER_KEY=${founderKey}
+JWT_SECRET=${jwtSecret}
+SSO_METADATA_URL=${ssoMetadataUrl}
 ALLOWED_HOSTS=["${domain}","www.${domain}","api.${domain}"]
 
 # Email Configuration
@@ -79,16 +81,17 @@ LOG_LEVEL=info
 API_RATE_LIMIT=1000/hour
 "@
     
-    Set-Content -Path "backend\.env.prod" -Value $envContent
-    Write-ColorOutput "Green" "✓ backend/.env.prod created"
+    Set-Content -Path "Mehaal.Backend\.env.prod" -Value $envContent
+    Write-ColorOutput "Green" "✓ Mehaal.Backend/.env.prod created"
 }
 
-function Create-FrontendEnv($domain) {
+function Create-FrontendEnv($domain, $founderKey) {
     $envContent = @"
 # Frontend Environment Variables - Production
 VITE_API_URL=https://api.${domain}
 VITE_APP_NAME=Mehaal
 VITE_APP_VERSION=1.0.0
+VITE_FOUNDER_KEY=${founderKey}
 VITE_ENABLE_ANALYTICS=true
 VITE_ENABLE_DEBUG=false
 "@
@@ -137,25 +140,36 @@ if (-not (Test-PasswordStrength $DBPassword)) {
 Write-ColorOutput "Green" "✓ Password set"
 Write-Host ""
 
-# Step 3: Generate secret key
-Write-ColorOutput "Cyan" "Step 3: Generating Security Keys"
-$SecretKey = Generate-SecretKey
-Write-ColorOutput "Green" "✓ Secret key generated"
+# Step 3: Generate security material
+Write-ColorOutput "Cyan" "Step 3: Generating Security Material"
+$JwtSecret = Generate-HexString 64
+$FounderKey = Generate-HexString 48
+Write-ColorOutput "Green" "✓ JWT secret and founder key generated"
 Write-Host ""
 
-# Step 4: Create nginx config
-Write-ColorOutput "Cyan" "Step 4: Configuring Nginx"
+# Step 4: Capture SSO metadata URL
+Write-ColorOutput "Cyan" "Step 4: Capturing SSO Metadata URL"
+$SsoMetadataUrl = Read-Host "Enter IdP metadata URL (https://...)"
+if ([string]::IsNullOrWhiteSpace($SsoMetadataUrl) -or $SsoMetadataUrl -match "changeme|placeholder|example|dummy") {
+    Write-ColorOutput "Red" "✗ Provide a real metadata URL; placeholders are not allowed"
+    exit 1
+}
+Write-ColorOutput "Green" "✓ SSO metadata URL captured"
+Write-Host ""
+
+# Step 5: Create nginx config
+Write-ColorOutput "Cyan" "Step 5: Configuring Nginx"
 Create-NginxConfig $Domain
 Write-Host ""
 
-# Step 5: Create backend .env
-Write-ColorOutput "Cyan" "Step 5: Configuring Backend Environment"
-Create-BackendEnv $Domain $DBPassword $SecretKey $Email
+# Step 6: Create backend .env
+Write-ColorOutput "Cyan" "Step 6: Configuring Backend Environment"
+Create-BackendEnv $Domain $DBPassword $JwtSecret $FounderKey $SsoMetadataUrl $Email
 Write-Host ""
 
-# Step 6: Create frontend .env
-Write-ColorOutput "Cyan" "Step 6: Configuring Frontend Environment"
-Create-FrontendEnv $Domain
+# Step 7: Create frontend .env
+Write-ColorOutput "Cyan" "Step 7: Configuring Frontend Environment"
+Create-FrontendEnv $Domain $FounderKey
 Write-Host ""
 
 # Step 7: Display DNS instructions
@@ -207,7 +221,7 @@ Write-Host ""
 
 Write-ColorOutput "Yellow" "Files created:"
 Write-Host "  ✓ nginx.conf"
-Write-Host "  ✓ backend/.env.prod"
+Write-Host "  ✓ Mehaal.Backend/.env.prod"
 Write-Host "  ✓ .env.production"
 Write-Host ""
 
@@ -234,7 +248,7 @@ DNS Records to Add:
 
 Files Created:
 - nginx.conf
-- backend/.env.prod
+- Mehaal.Backend/.env.prod
 - .env.production
 
 Next Steps:

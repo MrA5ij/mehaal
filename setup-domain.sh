@@ -47,14 +47,25 @@ fi
 echo -e "${GREEN}✓ Password set${NC}"
 echo ""
 
-# 3. Generate secret key
-echo -e "${BLUE}Step 3: Generating Security Keys${NC}"
-SECRET_KEY=$(openssl rand -base64 32)
-echo -e "${GREEN}✓ Secret key generated${NC}"
+# 3. Generate security material
+echo -e "${BLUE}Step 3: Generating Security Material${NC}"
+JWT_SECRET=$(openssl rand -hex 64)
+FOUNDER_KEY=$(openssl rand -hex 48)
+echo -e "${GREEN}✓ JWT secret and founder key generated${NC}"
 echo ""
 
-# 4. Create nginx config
-echo -e "${BLUE}Step 4: Configuring Nginx${NC}"
+# 4. Capture SSO metadata endpoint
+echo -e "${BLUE}Step 4: Capturing SSO Metadata URL${NC}"
+read -p "Enter IdP metadata URL (https://...): " SSO_METADATA_URL
+if [[ -z "${SSO_METADATA_URL}" || "${SSO_METADATA_URL}" =~ (changeme|placeholder|example|dummy) ]]; then
+   echo -e "${RED}✗ Provide a real metadata URL; placeholders are not allowed${NC}"
+   exit 1
+fi
+echo -e "${GREEN}✓ SSO metadata URL captured${NC}"
+echo ""
+
+# 5. Create nginx config
+echo -e "${BLUE}Step 5: Configuring Nginx${NC}"
 if [ ! -f "nginx.conf.template" ]; then
     echo -e "${RED}✗ nginx.conf.template not found!${NC}"
     exit 1
@@ -65,15 +76,16 @@ sed "s/\${DOMAIN}/$DOMAIN/g" nginx.conf.template > nginx.conf
 echo -e "${GREEN}✓ nginx.conf created for $DOMAIN${NC}"
 echo ""
 
-# 5. Create backend .env.prod
-echo -e "${BLUE}Step 5: Configuring Backend Environment${NC}"
-cat > backend/.env.prod << EOF
+# 6. Create backend .env.prod
+echo -e "${BLUE}Step 6: Configuring Backend Environment${NC}"
+cat > Mehaal.Backend/.env.prod << EOF
 # Database
-DATABASE_URL=postgresql://mehaal_user:${DB_PASSWORD}@postgres:5432/mehaal_db
+DATABASE_URL=postgresql+psycopg://mehaal_user:${DB_PASSWORD}@postgres:5432/mehaal_db
 DATABASE_POOL_SIZE=20
 DATABASE_MAX_OVERFLOW=40
 
 # Environment
+APP_ENV=prod
 DEBUG=False
 ENVIRONMENT=production
 
@@ -81,7 +93,9 @@ ENVIRONMENT=production
 CORS_ORIGINS=["https://${DOMAIN}","https://www.${DOMAIN}"]
 
 # Security
-SECRET_KEY=${SECRET_KEY}
+FOUNDER_KEY=${FOUNDER_KEY}
+JWT_SECRET=${JWT_SECRET}
+SSO_METADATA_URL=${SSO_METADATA_URL}
 ALLOWED_HOSTS=["${DOMAIN}","www.${DOMAIN}","api.${DOMAIN}"]
 
 # Email Configuration (Optional)
@@ -98,16 +112,17 @@ LOG_LEVEL=info
 API_RATE_LIMIT=1000/hour
 EOF
 
-echo -e "${GREEN}✓ backend/.env.prod created${NC}"
+echo -e "${GREEN}✓ Mehaal.Backend/.env.prod created${NC}"
 echo ""
 
-# 6. Create frontend .env.production
-echo -e "${BLUE}Step 6: Configuring Frontend Environment${NC}"
+# 7. Create frontend .env.production
+echo -e "${BLUE}Step 7: Configuring Frontend Environment${NC}"
 cat > .env.production << EOF
 # Frontend Environment Variables - Production
 VITE_API_URL=https://api.${DOMAIN}
 VITE_APP_NAME=Mehaal
 VITE_APP_VERSION=1.0.0
+VITE_FOUNDER_KEY=${FOUNDER_KEY}
 VITE_ENABLE_ANALYTICS=true
 VITE_ENABLE_DEBUG=false
 EOF
@@ -115,8 +130,8 @@ EOF
 echo -e "${GREEN}✓ .env.production created${NC}"
 echo ""
 
-# 7. Create docker-compose.prod config
-echo -e "${BLUE}Step 7: Preparing Docker Compose${NC}"
+# 8. Create docker-compose.prod config
+echo -e "${BLUE}Step 8: Preparing Docker Compose${NC}"
 # Update docker-compose.prod.yml with new database password
 # This is a simplified version - adjust based on your actual compose file
 cat > docker-compose.override.yml << EOF
@@ -201,7 +216,7 @@ ${YELLOW}Before deploying, verify:${NC}
 
 3. Configuration Files
    [ ] nginx.conf updated with domain
-   [ ] backend/.env.prod configured
+   [ ] Mehaal.Backend/.env.prod configured
    [ ] .env.production configured
    [ ] docker-compose.prod.yml ready
 
@@ -211,7 +226,9 @@ ${YELLOW}Before deploying, verify:${NC}
    [ ] Backup strategy in place
 
 5. Security
-   [ ] SECRET_KEY is strong
+   [ ] JWT_SECRET rotated and stored securely
+   [ ] FOUNDER_KEY synchronized with frontend
+   [ ] SSO_METADATA_URL points to live IdP metadata
    [ ] ALLOWED_HOSTS configured
    [ ] CORS origins set correctly
    [ ] Rate limiting enabled
@@ -264,6 +281,6 @@ echo "4. Deploy using the commands above"
 echo ""
 echo -e "${BLUE}Files created:${NC}"
 echo "  ✓ nginx.conf"
-echo "  ✓ backend/.env.prod"
+echo "  ✓ Mehaal.Backend/.env.prod"
 echo "  ✓ .env.production"
 echo ""

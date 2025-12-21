@@ -62,7 +62,7 @@ PowerShell -ExecutionPolicy Bypass -File setup-domain.ps1
 # فوری طور پر یہ تیار ہوں گی:
 # ✅ nginx.conf
 # ✅ .env.production
-# ✅ backend/.env.prod
+# ✅ Mehaal.Backend/.env.prod
 ```
 
 ### 2. Linux/Mac پر:
@@ -159,7 +159,7 @@ sudo crontab -e
 [ ] Files Configure کیے
     ├─ nginx.conf میں domain
     ├─ .env.production (frontend)
-    ├─ backend/.env.prod
+    ├─ Mehaal.Backend/.env.prod
     └─ docker-compose.prod.yml
 
 [ ] Database Setup

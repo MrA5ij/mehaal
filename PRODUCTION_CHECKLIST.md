@@ -3,7 +3,9 @@
 ## Pre-Deployment
 
 - [ ] Database credentials changed in `.env.prod`
-- [ ] SECRET_KEY configured with strong random value
+- [ ] JWT_SECRET configured with strong random value
+- [ ] FOUNDER_KEY provisioned and stored securely
+- [ ] SSO_METADATA_URL points to live IdP metadata
 - [ ] SSL certificates placed in `ssl/` directory
 - [ ] Domain name updated in `nginx.conf`
 - [ ] CORS_ORIGINS updated to production domain
@@ -83,7 +85,7 @@ docker-compose -f docker-compose.prod.yml exec -T postgres psql -U mehaal_user m
 - [ ] SSH keys configured for server access
 - [ ] Firewall rules configured (allow 80, 443 only)
 - [ ] Database password strong (20+ characters)
-- [ ] SECRET_KEY strong and unique
+- [ ] JWT_SECRET strong and unique
 - [ ] Regular backups scheduled
 - [ ] Monitoring and alerting setup
 

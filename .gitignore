@@ -30,5 +30,12 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Python environments
+.venv/
+venv/
+venv.dev/
+venv.staging/
+venv.prod/
+
 # Build output
 *.tsbuildinfo

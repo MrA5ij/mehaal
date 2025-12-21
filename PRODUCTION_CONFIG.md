@@ -13,7 +13,7 @@ NODE_ENV=production
 
 # Backend
 FOUNDER_KEY=your_secure_founder_key_here
-DATABASE_URL=postgresql://user:password@prod-db-host:5432/mehaal_prod
+DATABASE_URL=postgresql+psycopg://user:password@prod-db-host:5432/mehaal_prod
 ENVIRONMENT=production
 LOG_LEVEL=info
 

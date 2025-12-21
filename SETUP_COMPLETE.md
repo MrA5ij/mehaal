@@ -110,7 +110,7 @@ PowerShell -ExecutionPolicy Bypass -File setup-domain.ps1  # Windows
 # یہ تیار کرے گی:
 # ✓ nginx.conf
 # ✓ .env.production
-# ✓ backend/.env.prod
+# ✓ Mehaal.Backend/.env.prod
 ```
 
 ### Step 2: DNS Configuration (24-48 hours)

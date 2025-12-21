@@ -372,7 +372,7 @@ from origin 'https://yourdomain.com' has been blocked by CORS policy
 ### Diagnosis:
 ```bash
 # Check backend CORS config
-grep -i "CORS_ORIGINS" backend/.env.prod
+grep -i "CORS_ORIGINS" Mehaal.Backend/.env.prod
 
 # Check nginx headers
 curl -I https://api.yourdomain.com/api/home-page/

@@ -145,15 +145,18 @@ mehaal/
 
 ## 🔧 Configuration Files
 
-### Backend Environment (.env in Mehaal.Backend/)
+### Backend Environment (.env.<env> in Mehaal.Backend/)
 
 ```env
-DATABASE_URL=postgresql://mehaal_user:mehaal_password@localhost:5432/mehaal_db
-DEBUG=True
-ENVIRONMENT=development
+APP_ENV=dev
+DATABASE_URL=sqlite:///./mehaal_dev.db
+FOUNDER_KEY=dev-founder-key-1c9e6c46b20e4090b132e1776937f124
+JWT_SECRET=dev-jwt-secret-8f2df0e7bbf14c0c93c3788c12f5030b
+SSO_METADATA_URL=https://idp.dev.mehaal.local/metadata
 CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:8000
-SECRET_KEY=your-secret-key-change-in-production-min-32-chars
 ```
+
+Create matching `.env.staging` and `.env.prod` files with real secrets; each file must correspond to an activated `venv.<env>` virtual environment.
 
 ### Frontend Environment (.env in root)
 
@@ -162,6 +165,7 @@ VITE_API_URL=http://localhost:8000
 VITE_APP_NAME=Mehaal.Tech AI
 VITE_APP_VERSION=3.0.0
 VITE_ENVIRONMENT=development
+VITE_FOUNDER_KEY=dev-founder-key-1c9e6c46b20e4090b132e1776937f124
 VITE_ENABLE_3D_ANIMATIONS=true
 VITE_ENABLE_ADMIN_PANEL=true
 ```
@@ -335,12 +339,14 @@ Once backend is running:
 
 **⚠️ IMPORTANT: Before deploying to production:**
 
-1. Change `SECRET_KEY` in backend `.env`
-2. Change `blowfish_secret` in phpMyAdmin config
-3. Update database passwords
-4. Set `DEBUG=False`
-5. Configure proper CORS origins
-6. Use environment-specific `.env` files
+1. Rotate `JWT_SECRET` in backend `.env.prod`
+2. Rotate `FOUNDER_KEY` and update frontend `VITE_FOUNDER_KEY`
+3. Change `blowfish_secret` in phpMyAdmin config
+4. Update database passwords
+5. Set `DEBUG=False`
+6. Configure proper CORS origins
+7. Ensure `SSO_METADATA_URL` points to the live IdP metadata
+8. Use environment-specific `.env` files
 
 ---
 
