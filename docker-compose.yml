@@ -33,6 +33,7 @@ services:
       PMA_PORT: 5432
       PMA_USER: mehaal_user
       PMA_PASSWORD: mehaal_password
+      PMA_HTTPS: "false"
       POSTGRES_USER: mehaal_user
       POSTGRES_PASSWORD: mehaal_password
       POSTGRES_DB: mehaal_db
