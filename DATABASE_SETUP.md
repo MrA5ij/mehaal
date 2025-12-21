@@ -33,7 +33,7 @@ docker-compose -f docker-compose.prod.yml up -d postgres
 **کیا ہوتا ہے:**
 - PostgreSQL 15 Alpine image download ہوتی ہے
 - Volume میں data persist ہوتا ہے (`postgres_data_prod`)
-- User: `mehaal_user`
+- User:`.env.prod`
 - Password: `.env.prod` سے
 
 ### Method 2: Local Installation (Development)
@@ -60,14 +60,7 @@ brew services start postgresql
 
 ```bash
 # PostgreSQL چلائیں
-docker run -d \
-  --name mehaal-db \
-  -e POSTGRES_USER=mehaal_user \
-  -e POSTGRES_PASSWORD=mehaal_password \
-  -e POSTGRES_DB=mehaal_db \
-  -p 5432:5432 \
-  -v postgres_data:/var/lib/postgresql/data \
-  postgres:15-alpine
+docker run -d 
 
 # Database میں جائیں
 docker exec -it mehaal-db psql -U mehaal_user -d mehaal_db

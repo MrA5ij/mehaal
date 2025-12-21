@@ -31,7 +31,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://${DB_USER:-mehaal_user}:${DB_PASSWORD:-change_me_in_production}@postgres:5432/${DB_NAME:-mehaal_db}
       - DEBUG=False
-      - ENVIRONMENT=production
+      - APP_ENV=production
       - LOG_LEVEL=info
       - CORS_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
     depends_on:

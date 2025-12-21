@@ -154,7 +154,7 @@ DATABASE_URL=postgresql://mehaal_user:STRONG_PASSWORD@postgres:5432/mehaal_db
 
 # Environment
 DEBUG=False
-ENVIRONMENT=production
+APP_ENV=production
 ALLOWED_HOSTS=["yourdomain.com","www.yourdomain.com","api.yourdomain.com"]
 
 # CORS - اپنے domain کے لیے
@@ -163,12 +163,7 @@ CORS_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
 # Security - STRONG SECRET KEY بنائیں
 SECRET_KEY=your-very-strong-secret-key-min-32-chars
 
-# Email (Optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-ADMIN_EMAIL=admin@yourdomain.com
+
 ```
 
 ---
@@ -178,13 +173,13 @@ ADMIN_EMAIL=admin@yourdomain.com
 ### docker-compose.prod.yml میں SSL Volume
 
 ```yaml
-version: '3.8'
+
 
 services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: mehaal_user
+      POSTGRES_USER: 
       POSTGRES_PASSWORD: your-strong-password
       POSTGRES_DB: mehaal_db
     volumes:
@@ -198,7 +193,7 @@ services:
       dockerfile: Dockerfile.prod
     environment:
       DATABASE_URL: postgresql://mehaal_user:your-strong-password@postgres:5432/mehaal_db
-      ENVIRONMENT: production
+      APP_ENV: production
     depends_on:
       - postgres
     networks:
