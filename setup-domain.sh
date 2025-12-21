@@ -87,7 +87,7 @@ DATABASE_MAX_OVERFLOW=40
 # Environment
 APP_ENV=prod
 DEBUG=False
-ENVIRONMENT=production
+APP_ENV=production
 
 # CORS
 CORS_ORIGINS=["https://${DOMAIN}","https://www.${DOMAIN}"]
@@ -99,10 +99,10 @@ SSO_METADATA_URL=${SSO_METADATA_URL}
 ALLOWED_HOSTS=["${DOMAIN}","www.${DOMAIN}","api.${DOMAIN}"]
 
 # Email Configuration (Optional)
-# SMTP_HOST=smtp.gmail.com
-# SMTP_PORT=587
-# SMTP_USER=your-email@gmail.com
-# SMTP_PASSWORD=your-app-password
+SMTP_HOST=${SMTP_HOST}
+SMTP_PORT=${SMTP_PORT}
+SMTP_USER=${SMTP_USER}
+SMTP_PASSWORD=${SMTP_PASSWORD}
 ADMIN_EMAIL=${ADMIN_EMAIL}
 
 # Logging
