@@ -243,8 +243,8 @@ NODE_ENV=production
 ```env
 APP_ENV=dev
 DATABASE_URL=sqlite:///./mehaal_dev.db
-FOUNDER_KEY=dev-founder-key-1c9e6c46b20e4090b132e1776937f124
-JWT_SECRET=dev-jwt-secret-8f2df0e7bbf14c0c93c3788c12f5030b
+FOUNDER_KEY=
+JWT_SECRET=
 SSO_METADATA_URL=https://idp.dev.mehaal.local/metadata
 CORS_ORIGINS=["http://localhost:5173","https://yourdomain.com"]
 ```
