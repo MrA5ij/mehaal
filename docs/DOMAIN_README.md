@@ -16,12 +16,12 @@ Mehaal میں domain setup کے لیے یہ documents موجود ہیں:
 
 ### 3. **setup-domain.sh** 🔧
 - **مقصد:** Linux server پر خودکار setup
-- **استعمال:** `./setup-domain.sh` (Linux/Mac)
+- **استعمال:** `../scripts/setup-domain.sh` (Linux/Mac)
 - **کیا کرتا ہے:** تمام files خود configure کرے
 
 ### 4. **setup-domain.ps1** 🪟
 - **مقصد:** Windows پر خودکار setup
-- **استعمال:** `PowerShell -ExecutionPolicy Bypass -File setup-domain.ps1`
+- **استعمال:** `PowerShell -ExecutionPolicy Bypass -File ../scripts/setup-domain.ps1`
 - **کیا کرتا ہے:** تمام files خود configure کرے
 
 ---
@@ -68,8 +68,8 @@ PowerShell -ExecutionPolicy Bypass -File setup-domain.ps1
 ### 2. Linux/Mac پر:
 ```bash
 # Setup script چلائیں
-chmod +x setup-domain.sh
-./setup-domain.sh
+chmod +x ../scripts/setup-domain.sh
+../scripts/setup-domain.sh
 
 # باقی DOMAIN_QUICK_REFERENCE.md دیکھیں
 ```
@@ -247,10 +247,11 @@ git clone <your-repo> .
 ### 2. Configuration
 ```bash
 # Setup script چلائیں (اگر Linux ہو)
-./setup-domain.sh
+chmod +x ./scripts/setup-domain.sh
+./scripts/setup-domain.sh
 
 # یا manually configure کریں
-# - nginx.conf update کریں
+# - docker/nginx.conf update کریں
 # - .env files تیار کریں
 ```
 
@@ -386,9 +387,9 @@ docker-compose -f docker-compose.prod.yml up -d
 
 - [DOMAIN_QUICK_REFERENCE.md](./DOMAIN_QUICK_REFERENCE.md) - فوری reference
 - [DOMAIN_SETUP.md](./DOMAIN_SETUP.md) - تفصیلی guide
-- [setup-domain.sh](./setup-domain.sh) - Linux script
-- [setup-domain.ps1](./setup-domain.ps1) - Windows script
-- [nginx.conf.template](./nginx.conf.template) - Nginx template
+- [setup-domain.sh](../scripts/setup-domain.sh) - Linux script
+- [setup-domain.ps1](../scripts/setup-domain.ps1) - Windows script
+- [nginx.conf.template](../docker/nginx.conf.template) - Nginx template
 
 ---
 

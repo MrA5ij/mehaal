@@ -53,6 +53,9 @@ Write-Host "📦 Building and starting containers..." -ForegroundColor Cyan
 Write-Host "This may take a few minutes on first run..." -ForegroundColor Gray
 Write-Host ""
 
+# Navigate to docker directory
+cd (Split-Path -Parent $MyInvocation.MyCommand.Path)\..\docker
+
 # Build and start containers
 docker-compose up --build -d
 

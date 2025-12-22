@@ -136,13 +136,13 @@ curl http://localhost:8000/api/platform-settings
   - Monitoring checklist
 
 ### Automation Scripts
-- **[setup-domain.ps1](./setup-domain.ps1)** — Windows PowerShell setup
+- **[setup-domain.ps1](../scripts/setup-domain.ps1)** — Windows PowerShell setup
   - Automatic configuration
   - Interactive questions
   - Auto-generates configs
   - One-command deployment
 
-- **[setup-domain.sh](./setup-domain.sh)** — Linux/Mac Bash setup
+- **[setup-domain.sh](../scripts/setup-domain.sh)** — Linux/Mac Bash setup
   - Automatic configuration
   - Interactive setup
   - DNS/SSL instructions
@@ -306,10 +306,10 @@ curl http://localhost:8000/api/platform-settings
 ## 🐳 Docker & Infrastructure
 
 ### Docker Setup
-- **[docker-compose.yml](./docker-compose.yml)** - Development
-- **[docker-compose.prod.yml](./docker-compose.prod.yml)** - Production
-- **[nginx.conf](./nginx.conf)** - Web server config
-- **[nginx.conf.template](./nginx.conf.template)** - Template for domain update
+- **[docker-compose.yml](../docker/docker-compose.yml)** - Development
+- **[docker-compose.prod.yml](../docker/docker-compose.prod.yml)** - Production
+- **[nginx.conf](../docker/nginx.conf)** - Web server config
+- **[nginx.conf.template](../docker/nginx.conf.template)** - Template for domain update
 
 ### Configuration Files
 - **[.env.development](./backend/.env.example)** - Backend example
@@ -406,10 +406,10 @@ src/
 ### "میں اپنے domain پر deploy کرنا چاہتا ہوں"
 ```
 1. DOMAIN_QUICK_REFERENCE.md پڑھیں
-2. setup-domain.ps1 (Windows) یا setup-domain.sh (Linux) چلائیں
+2. ../scripts/setup-domain.ps1 (Windows) یا ../scripts/setup-domain.sh (Linux) چلائیں
 3. DNS records add کریں
 4. SSL certificate لیں
-5. docker-compose.prod.yml کے ساتھ deploy کریں
+5. cd docker && docker-compose -f docker-compose.prod.yml up -d && cd .. کے ساتھ deploy کریں
 ```
 
 ### "میں home page content edit کرنا چاہتا ہوں"
@@ -481,9 +481,9 @@ src/
 - [backend/.env.example](./backend/.env.example) - Backend template
 
 ### Scripts
-- [setup-domain.ps1](./setup-domain.ps1) - Windows setup
-- [setup-domain.sh](./setup-domain.sh) - Linux setup
-- [nginx.conf.template](./nginx.conf.template) - Nginx template
+- [setup-domain.ps1](../scripts/setup-domain.ps1) - Windows setup
+- [setup-domain.sh](../scripts/setup-domain.sh) - Linux setup
+- [nginx.conf.template](../docker/nginx.conf.template) - Nginx template
 
 ---
 

@@ -64,14 +64,14 @@
 
 **Windows:**
 ```powershell
-PowerShell -ExecutionPolicy Bypass -File setup-domain.ps1
+PowerShell -ExecutionPolicy Bypass -File ../scripts/setup-domain.ps1
 ```
 *تمام configs خودکار ہوں گی - صرف domain, email, IP, password دیں*
 
 **Linux/Mac:**
 ```bash
-chmod +x setup-domain.sh
-./setup-domain.sh
+chmod +x ../scripts/setup-domain.sh
+../scripts/setup-domain.sh
 ```
 *تمام configs خودکار ہوں گی - صرف domain, email, IP, password دیں*
 

@@ -24,11 +24,14 @@ Production:
 
 ```powershell
 # Terminal 1
-cd e:\code\site\mehaal\backend
+cd e:\code\site\mehaal\docker
 docker-compose up -d
+cd ..
 
 # Check status
+cd docker
 docker-compose ps
+cd ..
 
 # Verify:
 # http://localhost:8000/docs
@@ -476,7 +479,9 @@ Click "Execute"
 
 ```powershell
 # Container میں enter کریں
+cd docker
 docker-compose exec postgres psql -U mehaal_user -d mehaal_db
+cd ..
 
 # Tables دیکھیں
 \dt
@@ -624,7 +629,7 @@ Check:
 
 ```
 Development:
-1. docker-compose up -d        (Backend start)
+1. cd docker && docker-compose up -d && cd ..        (Backend start)
 2. npm run dev                 (Frontend start)
 3. http://localhost:5173       (App)
 4. /admin/home-page           (Edit content)
@@ -687,8 +692,8 @@ API Endpoints:
 
 Tools:
 ├─ Swagger UI: localhost:8000/docs
-├─ Database: docker-compose exec postgres psql
-└─ Logs: docker-compose logs -f backend
+├─ Database: cd docker && docker-compose exec postgres psql && cd ..
+└─ Logs: cd docker && docker-compose logs -f backend && cd ..
 ```
 
 ---

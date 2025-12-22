@@ -213,7 +213,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../docker/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro
     depends_on:
       - backend
@@ -258,7 +258,9 @@ sudo certbot certonly --standalone \
 
 ```bash
 # nginx.conf میں آپ کے domain کا نام
+cd ../docker
 sed -i 's/yourdomain.com/your-actual-domain.com/g' nginx.conf
+cd ..
 ```
 
 ### Step 4: Environment Variables سیٹ کریں
@@ -276,7 +278,9 @@ echo "VITE_API_URL=https://api.yourdomain.com" > .env.production
 
 ```bash
 # Production setup
+cd docker
 docker-compose -f docker-compose.prod.yml up -d
+cd ..
 
 # Logs چیک کریں
 docker-compose -f docker-compose.prod.yml logs -f
@@ -353,14 +357,18 @@ CORS_ORIGINS=["https://yourdomain.com","https://www.yourdomain.com"]
 
 ```bash
 # Backend health check کریں
+cd docker
 docker-compose logs backend
+cd ..
 
 # Database connection check کریں
+cd docker
 docker-compose exec backend python -c "
 from app.database import SessionLocal
 db = SessionLocal()
 print('Database Connected!')
 "
+cd ..
 ```
 
 ### Problem: DNS نہیں resolve ہو رہا

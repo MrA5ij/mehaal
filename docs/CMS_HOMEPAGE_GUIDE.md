@@ -81,8 +81,9 @@ Landing Home Page CMS آپ یہ manage کر سکتے ہیں:
 
 ### Step 1: Start Backend
 ```bash
-cd backend
+cd docker
 docker-compose up -d
+cd ..
 ```
 
 ### Step 2: Open Swagger UI
@@ -387,7 +388,9 @@ Open: `http://localhost:8000/docs`
 
 ```sql
 -- View home page data in PostgreSQL
+cd docker
 docker-compose exec postgres psql -U mehaal_user mehaal_db
+cd ..
 
 SELECT id, hero_title, is_published, updated_at FROM home_pages;
 
@@ -402,7 +405,9 @@ SELECT sections FROM home_pages WHERE id = 1;
 
 1. **Start Backend:**
    ```bash
+   cd docker
    docker-compose up -d
+   cd ..
    ```
 
 2. **Open Swagger:** `http://localhost:8000/docs`

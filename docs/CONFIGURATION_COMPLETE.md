@@ -234,14 +234,16 @@ taskkill /PID <PID> /F
 ### Docker Not Starting
 ```powershell
 # Reset Docker containers
+cd docker
 docker-compose down -v
 docker-compose up --build -d
+cd ..
 ```
 
 ### Database Connection Error
 - Check if PostgreSQL container is running: `docker ps`
-- View logs: `docker-compose logs postgres`
-- Restart: `docker-compose restart postgres`
+- View logs: `cd docker && docker-compose logs postgres && cd ..`
+- Restart: `cd docker && docker-compose restart postgres && cd ..`
 
 ---
 

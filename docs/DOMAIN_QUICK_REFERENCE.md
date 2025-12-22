@@ -51,8 +51,8 @@ sudo certbot certonly --standalone \
 
 ```bash
 # ایک script script چلائیں
-chmod +x setup-domain.sh
-./setup-domain.sh
+chmod +x ../scripts/setup-domain.sh
+../scripts/setup-domain.sh
 
 # یہ پوچھے گا:
 # 1. Domain name
@@ -61,7 +61,7 @@ chmod +x setup-domain.sh
 # 4. Database password
 
 # خودکار طور پر یہ کریں گی:
-# ✅ nginx.conf update
+# ✅ docker/nginx.conf update
 # ✅ Environment files تیار
 # ✅ SSL instructions دیں
 ```

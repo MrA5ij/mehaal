@@ -25,6 +25,9 @@ echo "📦 Building and starting containers..."
 echo "This may take a few minutes on first run..."
 echo ""
 
+# Navigate to docker directory
+cd "$(dirname "$0")/../docker"
+
 # Build and start containers
 docker-compose up --build -d
 

@@ -41,13 +41,13 @@ services:
         condition: service_healthy
     restart: always
     volumes:
-      - ./Mehaal.Backend/phpmyadmin/config.inc.php:/etc/phpmyadmin/config.inc.php
+      - ../Mehaal.Backend/phpmyadmin/config.inc.php:/etc/phpmyadmin/config.inc.php
     networks:
       - mehaal-network
 
   backend:
     build:
-      context: ./Mehaal.Backend
+      context: ../Mehaal.Backend
       dockerfile: Dockerfile
     container_name: mehaal-backend
     ports:
@@ -59,8 +59,8 @@ services:
       - CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:8000
       - LOG_LEVEL=info
     volumes:
-      - ./Mehaal.Backend:/app
-      - ./Mehaal.Backend/uploads:/app/uploads
+      - ../Mehaal.Backend:/app
+      - ../Mehaal.Backend/uploads:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -76,7 +76,7 @@ services:
 
   frontend:
     build:
-      context: .
+      context: ../Mehaal.Frontend
       dockerfile: Dockerfile
     container_name: mehaal-app
     ports:
@@ -86,8 +86,7 @@ services:
       - NODE_ENV=development
       - VITE_API_URL=http://localhost:8000
     volumes:
-      - .:/app
-
+      - ../Mehaal.Frontend:/app
       - /app/node_modules
     restart: unless-stopped
     depends_on:
