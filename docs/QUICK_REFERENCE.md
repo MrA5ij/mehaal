@@ -20,7 +20,7 @@ chmod +x start.sh && ./start.sh
 | Frontend | http://localhost:5173 | - |
 | Backend API | http://localhost:8000 | - |
 | API Docs | http://localhost:8000/docs | - |
-| phpMyAdmin | http://localhost:8080 | user: mehaal_user<br>pass: mehaal_password |
+| pgAdmin | http://localhost:8080 | email: admin@mehaal.com<br>pass: admin |
 
 ## Docker Commands
 
@@ -87,7 +87,7 @@ npm install
 - `Mehaal.Backend/.env` - Backend environment
 - `.env` - Frontend environment
 - `docker-compose.yml` - Docker services
-- `Mehaal.Backend/phpmyadmin/config.inc.php` - phpMyAdmin config
+- `docker/docker-compose.yml` - pgAdmin service configuration
 
 ## Documentation
 

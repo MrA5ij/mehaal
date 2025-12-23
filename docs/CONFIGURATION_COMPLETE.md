@@ -26,8 +26,9 @@ Project ko successfully configure kar diya gaya hai aur ab ye fully functional h
   - Database: `mehaal_db`
   - Port: `5432`
 
-### 3. ✅ phpMyAdmin Setup
-- **Created:** `Mehaal.Backend/phpmyadmin/config.inc.php`
+### 3. ✅ pgAdmin Setup
+- **Using:** Docker volume-based configuration
+- **Replaced:** Old phpMyAdmin (MySQL) with pgAdmin (PostgreSQL)
 - **Port:** `8080`
 - **Features:**
   - Cookie authentication
@@ -39,7 +40,7 @@ Project ko successfully configure kar diya gaya hai aur ab ye fully functional h
 - **Updated:** `docker-compose.yml`
 - **Services:**
   - ✅ PostgreSQL (port 5432)
-  - ✅ phpMyAdmin (port 8080)
+  - ✅ pgAdmin (port 8080)
   - ✅ Backend API (port 8000)
   - ✅ Frontend (port 5173)
 - **Features:**
@@ -101,17 +102,23 @@ Once started, access these URLs:
 | **Frontend** | http://localhost:5173 | React application |
 | **Backend API** | http://localhost:8000 | FastAPI server |
 | **API Docs** | http://localhost:8000/docs | Swagger UI |
-| **phpMyAdmin** | http://localhost:8080 | Database management |
+| **pgAdmin** | http://localhost:8080 | PostgreSQL management |
 
 ---
 
 ## 📊 Database Access
 
-### phpMyAdmin Login:
+### pgAdmin Login:
 - **URL:** http://localhost:8080
-- **Server:** `postgres`
-- **Username:** `mehaal_user`
-- **Password:** `mehaal_password`
+- **Email:** admin@mehaal.com
+- **Password:** admin
+
+**Server Connection Details:**
+- **Host:** postgres
+- **Port:** 5432
+- **Database:** mehaal_db
+- **Username:** mehaal_user
+- **Password:** mehaal_password
 
 ### Command Line:
 ```powershell
@@ -126,8 +133,8 @@ docker exec -it mehaal-db psql -U mehaal_user -d mehaal_db
 mehaal/
 ├── 📂 Mehaal.Backend/
 │   ├── 📂 app/               # Backend application code
-│   ├── 📂 phpmyadmin/
-│   │   └── config.inc.php   # ✅ phpMyAdmin config (NEW)
+│   ├── 📂 phpmyadmin.old/
+│   │   └── (archived)       # ❌ Old MySQL admin tool
 │   ├── .env                  # ✅ Backend environment (NEW)
 │   ├── .env.example          # ✅ Template (NEW)
 │   ├── init_database.py      # ✅ DB initialization (NEW)
@@ -141,7 +148,7 @@ mehaal/
 │
 ├── .env                      # ✅ Frontend environment (NEW)
 ├── .env.example              # ✅ Template (NEW)
-├── docker-compose.yml        # ✅ Updated with phpMyAdmin
+├── docker-compose.yml        # ✅ Updated with pgAdmin
 ├── start.ps1                 # ✅ Windows startup (NEW)
 ├── start.sh                  # ✅ Linux/Mac startup (NEW)
 ├── start-dev.ps1             # ✅ Dev mode startup (NEW)
@@ -153,7 +160,7 @@ mehaal/
 
 ## ✨ New Features Added
 
-1. **phpMyAdmin Integration** - Easy database management via web interface
+1. **pgAdmin Integration** - PostgreSQL database management via web interface
 2. **Complete Environment Configuration** - All necessary environment variables set
 3. **Database Initialization Scripts** - Automated table creation and seeding
 4. **Multiple Startup Options** - Docker and manual development modes
@@ -201,7 +208,7 @@ VITE_ENABLE_ADMIN_PANEL=true
 3. **Verify services:**
    - Frontend: http://localhost:5173
    - Backend: http://localhost:8000/docs
-   - phpMyAdmin: http://localhost:8080
+   - pgAdmin: http://localhost:8080 (admin@mehaal.com/admin)
 
 4. **Initialize database** (if needed):
    ```powershell
@@ -251,7 +258,7 @@ cd ..
 
 - [x] Backend .env file created
 - [x] Frontend .env file created
-- [x] phpMyAdmin configured
+- [x] pgAdmin configured for PostgreSQL
 - [x] Docker Compose updated
 - [x] Database initialization scripts created
 - [x] Startup scripts created
@@ -272,7 +279,7 @@ All services have been configured and are ready to start. The project includes:
 - Complete backend with FastAPI
 - React frontend with Vite
 - PostgreSQL database
-- phpMyAdmin for database management
+- pgAdmin for PostgreSQL database management
 - Docker containerization
 - Development and production modes
 - Comprehensive documentation

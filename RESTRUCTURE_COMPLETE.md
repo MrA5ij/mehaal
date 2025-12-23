@@ -44,7 +44,7 @@ mehaal/
 │   ├── migrations/                    # Database migrations
 │   ├── seed/                          # Database seeds
 │   ├── uploads/                       # Runtime upload directory
-│   ├── phpmyadmin/                    # Database admin panel
+│   ├── phpmyadmin.old/                # Archived (replaced with pgAdmin)
 │   ├── requirements.txt               # Python dependencies
 │   ├── init_db.py
 │   ├── run_migrations.py
@@ -206,7 +206,7 @@ docker-compose up --build -d
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8000
 - **API Docs**: http://localhost:8000/docs
-- **phpMyAdmin**: http://localhost:8080
+- **pgAdmin**: http://localhost:8080 (Email: admin@mehaal.com, Password: admin)
 
 ---
 

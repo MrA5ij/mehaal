@@ -106,7 +106,7 @@ Backend and Frontend logs visible in terminal windows
 
 Docker will automatically:
 - Start PostgreSQL
-- Start phpMyAdmin
+- Start pgAdmin
 - Use production-like setup
 
 ---

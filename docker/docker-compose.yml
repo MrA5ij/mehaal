@@ -8,32 +8,28 @@ services:
       POSTGRES_USER: mehaal_user
       POSTGRES_PASSWORD: mehaal_password
       POSTGRES_DB: mehaal_db
-      POSTGRES_INITDB_ARGS: "-c max_connections=100 -c shared_buffers=256MB"
+      #POSTGRES_INITDB_ARGS: "-c max_connections=100 -c shared_buffers=256MB"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mehaal_user"]
+      test: ["CMD-SHELL", "pg_isready -U mehaal_user -d mehaal_db"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - mehaal-network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: mehaal-phpmyadmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: mehaal-pgadmin
     environment:
-      PMA_HOST: postgres
-      PMA_PORT: 5432
-      PMA_USER: mehaal_user
-      PMA_PASSWORD: mehaal_password
-      PMA_HTTPS: "false"
-      POSTGRES_USER: mehaal_user
-      POSTGRES_PASSWORD: mehaal_password
-      POSTGRES_DB: mehaal_db
+      PGADMIN_DEFAULT_EMAIL: admin@mehaal.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
     ports:
       - "8080:80"
     depends_on:
@@ -41,7 +37,7 @@ services:
         condition: service_healthy
     restart: always
     volumes:
-      - ../Mehaal.Backend/phpmyadmin/config.inc.php:/etc/phpmyadmin/config.inc.php
+      - pgadmin_data:/var/lib/pgadmin
     networks:
       - mehaal-network
 
@@ -64,6 +60,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    command: >
+      sh -c "sleep 10 &&
+             python init_database.py &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
@@ -96,6 +96,7 @@ services:
 
 volumes:
   postgres_data:
+  pgadmin_data:
 
 networks:
   mehaal-network:

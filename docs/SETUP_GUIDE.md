@@ -6,7 +6,7 @@
 - ⚛️ React 18 + Vite Frontend
 - 🐍 FastAPI Backend with PostgreSQL
 - 🎨 Advanced 3D animations with React Three Fiber
-- 📊 phpMyAdmin for database management
+- 📊 pgAdmin for PostgreSQL database management
 - 🐳 Docker containerization
 - 🔒 Complete authentication system
 
@@ -34,7 +34,7 @@ chmod +x start.sh
 This will automatically:
 - Build all containers
 - Setup PostgreSQL database
-- Start phpMyAdmin
+- Start pgAdmin
 - Launch backend API
 - Start frontend dev server
 
@@ -42,7 +42,7 @@ This will automatically:
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
-- phpMyAdmin: http://localhost:8080
+- pgAdmin: http://localhost:8080
 
 **Database Credentials:**
 - Username: `mehaal_user`
@@ -121,8 +121,7 @@ mehaal/
 │   │   ├── models/         # SQLAlchemy models
 │   │   ├── routes/         # API endpoints
 │   │   └── schemas/        # Pydantic schemas
-│   ├── phpmyadmin/         # phpMyAdmin configuration
-│   │   └── config.inc.php  # phpMyAdmin settings
+│   ├── phpmyadmin.old/     # Archived (replaced with pgAdmin)
 │   ├── requirements.txt    # Python dependencies
 │   ├── .env               # Environment variables
 │   └── Dockerfile         # Backend container
@@ -203,11 +202,16 @@ docker-compose restart backend
 
 ## 📊 Database Management
 
-### Using phpMyAdmin
+### Using pgAdmin
 
 1. Open http://localhost:8080
 2. Login with:
-   - Server: `postgres`
+   - Email: `admin@mehaal.com`
+   - Password: `admin`
+3. Add server connection:
+   - Host: `postgres`
+   - Port: `5432`
+   - Database: `mehaal_db`
    - Username: `mehaal_user`
    - Password: `mehaal_password`
 
@@ -341,7 +345,7 @@ Once backend is running:
 
 1. Rotate `JWT_SECRET` in backend `.env.prod`
 2. Rotate `FOUNDER_KEY` and update frontend `VITE_FOUNDER_KEY`
-3. Change `blowfish_secret` in phpMyAdmin config
+3. Change `PGADMIN_DEFAULT_PASSWORD` in docker-compose.prod.yml
 4. Update database passwords
 5. Set `DEBUG=False`
 6. Configure proper CORS origins
@@ -361,7 +365,7 @@ See [PRODUCTION_COMPLETE_GUIDE.md](PRODUCTION_COMPLETE_GUIDE.md) for detailed pr
 1. ✅ Project is configured and ready to run
 2. 🚀 Run `.\start.ps1` to start all services
 3. 🌐 Access frontend at http://localhost:5173
-4. 📊 Manage database at http://localhost:8080
+4. 📊 Manage database with pgAdmin at http://localhost:8080
 5. 📖 Explore API at http://localhost:8000/docs
 6. 💻 Start developing!
 
