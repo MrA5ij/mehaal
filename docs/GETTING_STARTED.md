@@ -89,15 +89,15 @@ VITE v5.0.0  ready in 123 ms
 **Windows:**
 ```bash
 cd backend
-python -m venv venv
-venv\Scripts\activate
+python -m venv venv-development
+venv-development\Scripts\activate
 ```
 
 **macOS/Linux:**
 ```bash
 cd backend
-python -m venv venv
-source venv/bin/activate
+python -m venv venv-development
+source venv-development/bin/activate
 ```
 
 ### 3b. Install Python Dependencies

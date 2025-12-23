@@ -42,8 +42,8 @@ npm run dev
 
 # 3. Backend (7 mins)
 cd backend
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+python -m venv venv-development
+source venv-development/bin/activate  # or venv-development\Scripts\activate on Windows
 pip install -r requirements.txt
 python init_db.py
 python seed_db.py

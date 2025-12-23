@@ -15,9 +15,11 @@ export default function AdminLayout() {
   const navItems: NavItem[] = [
     { path: '/admin', icon: '📊', label: 'Dashboard' },
     { path: '/admin/home-page', icon: '🏠', label: 'Home Page' },
+    { path: '/admin/pages', icon: '📄', label: 'Pages' },
+    { path: '/admin/navigation', icon: '📋', label: 'Navigation' },
+    { path: '/admin/brand-assets', icon: '🎨', label: 'Brand Assets' },
     { path: '/admin/platform-settings', icon: '⚙️', label: 'Platform Settings' },
     { path: '/admin/media', icon: '🖼️', label: 'Media Library' },
-    { path: '/admin/pages', icon: '📄', label: 'Pages' },
     { path: '/admin/analytics', icon: '📈', label: 'Analytics' },
   ];
 

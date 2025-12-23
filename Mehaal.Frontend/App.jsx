@@ -5,6 +5,9 @@ import AdminLayout from './src/admin/AdminLayout';
 import Dashboard from './src/admin/Dashboard';
 import HomePageEditor from './src/admin/HomePageEditor';
 import PlatformSettingsAdmin from './src/admin/PlatformSettingsAdmin';
+import CMSPagesAdmin from './src/admin/CMSPagesAdmin';
+import CMSNavigationAdmin from './src/admin/CMSNavigationAdmin';
+import BrandAssetsAdmin from './src/admin/BrandAssetsAdmin';
 
 // App Pages
 import DashboardApp from './src/pages/app/dashboard/Dashboard';
@@ -50,6 +53,9 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="home-page" element={<HomePageEditor />} />
             <Route path="platform-settings" element={<PlatformSettingsAdmin />} />
+            <Route path="pages" element={<CMSPagesAdmin />} />
+            <Route path="navigation" element={<CMSNavigationAdmin />} />
+            <Route path="brand-assets" element={<BrandAssetsAdmin />} />
           </Route>
         </Routes>
       </div>

@@ -89,13 +89,13 @@ Frontend runs at: `http://localhost:5173`
 ```bash
 # Create Python virtual environment
 cd backend
-python -m venv venv
+python -m venv venv-development
 
 # Activate virtual environment
 # Windows
-venv\Scripts\activate
+venv-development\Scripts\activate
 # macOS/Linux
-source venv/bin/activate
+source venv-development/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
