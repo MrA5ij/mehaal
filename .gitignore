@@ -39,3 +39,6 @@ venv.prod/
 
 # Build output
 *.tsbuildinfo
+.turbo
+apps/web/.next
+apps/eb/turbo

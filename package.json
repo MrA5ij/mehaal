@@ -1,0 +1,30 @@
+{
+  "name": "Mehaal",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "prettier": "latest",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "turbo": "latest",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "npm@10.0.0",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "@react-three/drei": "^10.7.7"
+  }
+}
