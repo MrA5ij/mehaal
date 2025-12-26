@@ -1,28 +1,32 @@
-FROM python:3.10-slim
+# Python 3.11 Slim for smaller image size
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Prevent Python from writing pyc files to disc
-ENV PYTHONDONTWRITEBYTECODE 1
-# Prevent Python from buffering stdout and stderr
-ENV PYTHONUNBUFFERED 1
+# Prevent Python from writing pyc files and buffering stdout
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Install System Dependencies (Postgres driver needs gcc)
-RUN apt-get update && apt-get install -y \
-    gcc \
-    libpq-dev \
+# Install System Dependencies (Postgres & Build tools)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc libpq-dev \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python Dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy Code
+# Copy Application Code
 COPY . .
 
-# Run as non-root user (Best Practice)
-RUN adduser --disabled-password --gecos '' myuser
-USER myuser
+# Create a non-root user for security (Running as root is a big NO)
+RUN useradd -m appuser
+USER appuser
 
+# Expose port
 EXPOSE 8000
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# Gunicorn launch command with Uvicorn workers
+# --workers 4: Means can handle 4 parallel processes (Adjust based on CPU cores)
+CMD ["gunicorn", "main:app", "--workers", "4", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]

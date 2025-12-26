@@ -7,7 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// --- ENUMS (Hardcoded Logic) ---
 enum Role {
   CLIENT
   FRANCHISE
@@ -22,14 +21,11 @@ enum Plan {
   ENTERPRISE
 }
 
-// --- CORE SAAS MODELS ---
-
 model Tenant {
   id           String   @id @default(cuid())
-  slug         String   @unique // Subdomain (e.g., tesla.mysaas.com)
+  slug         String   @unique
   name         String
   
-  // Branding (Dynamic Theme Engine)
   primaryColor String   @default("#000000")
   logoUrl      String?
   
@@ -42,33 +38,34 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
-  password  String   // Hashed
+  password  String
   role      Role     @default(CLIENT)
   
   tenantId  String?
   tenant    Tenant?  @relation(fields: [tenantId], references: [id])
   
-  // AI Usage Logic
   plan      Plan     @default(FREE)
-  credits   Int      @default(100) // Token usage tracking
+  credits   Int      @default(100)
   
   createdAt DateTime @default(now())
 }
 
 model ApiKey {
   id        String   @id @default(cuid())
-  key       String   @unique // sk_live_...
+  key       String   @unique
   tenantId  String
   tenant    Tenant   @relation(fields: [tenantId], references: [id])
   isActive  Boolean  @default(true)
 }
 
-// --- AI JOBS (For Queue System) ---
 model Job {
   id        String   @id @default(cuid())
   userId    String
-  type      String   // "SPEECH_PROCESSING", "3D_RENDER"
+  type      String   // e.g. "SPEECH_PROCESSING"
   status    String   // "PENDING", "COMPLETED", "FAILED"
-  result    String?  // URL to S3 or Text Output
+  
+  // OPTIMIZATION: Use Text type for large AI responses (JSON blobs, Long summaries)
+  result    String?  @db.Text 
+  
   createdAt DateTime @default(now())
 }

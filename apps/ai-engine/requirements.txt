@@ -1,9 +1,1 @@
-fastapi
-uvicorn
-websockets
-sqlalchemy
-psycopg2-binary
-asyncpg
-python-jose[cryptography]
-passlib[bcrypt]
-python-multipart
+fastapi==0.109.2uvicorn==0.27.1gunicorn==21.2.0websockets==12.0sqlalchemy==2.0.27psycopg2-binary==2.9.9asyncpg==0.29.0python-jose[cryptography]==3.3.0passlib[bcrypt]==1.7.4python-multipart==0.0.9pydantic-settings==2.1.0
