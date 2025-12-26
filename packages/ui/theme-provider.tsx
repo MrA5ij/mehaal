@@ -1,40 +1,55 @@
 'use client'
-import React from 'react';
 
-interface ThemeProps {
-  tenant?: {
-    primaryColor?: string;
-    radius?: string;
-  };
-  children: React.ReactNode;
-}
+import * as React from 'react'
 
-export function ThemeProvider({ tenant, children }: ThemeProps) {
-  // Agar Tenant/Admin ka custom color hai, to default ko override karo
-  const styles = tenant?.primaryColor ? {
-    '--primary': hexToHsl(tenant.primaryColor),
-    '--ring': hexToHsl(tenant.primaryColor),
-  } as React.CSSProperties : {};
-
-  return (
-    <div style={styles} className="theme-wrapper contents">
-      {children}
-    </div>
-  )
-}
-
-// Helper: Hex (#ff0000) to HSL (0 100% 50%) for Tailwind
-function hexToHsl(hex: string) {
-  let c = hex.substring(1).split('');
-  if(c.length=== 3){
-      c= [c[0], c[0], c[1], c[1], c[2], c[2]];
-  }
-  const cStr = '0x'+c.join('');
-  const r = (parseInt(cStr)>>16)&255;
-  const g = (parseInt(cStr)>>8)&255;
-  const b = parseInt(cStr)&255;
+// Helper: Hex to HSL converter (Essential for Tailwind opacity modifiers)
+function hexToHSL(hex: string): string {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return "0 0% 0%"; // Fallback
   
-  // Simple conversion logic (simplified for script)
-  // In production use a robust library like 'tinycolor2'
-  return `${r} ${g}% ${b}%`; // Dummy HSL for illustration, real conversion needs math
+  let r = parseInt(result[1], 16);
+  let g = parseInt(result[2], 16);
+  let b = parseInt(result[3], 16);
+
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+
+  // Return space separated values for Tailwind (e.g., "240 5.9% 10%")
+  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+}
+
+interface ThemeProviderProps {
+  tenant?: {
+    primaryColor?: string
+    fontFamily?: string
+  }
+  children: React.ReactNode
+}
+
+export function ThemeProvider({ tenant, children }: ThemeProviderProps) {
+  React.useEffect(() => {
+    if (tenant?.primaryColor) {
+      const root = document.documentElement;
+      const hslColor = hexToHSL(tenant.primaryColor);
+      
+      // Injecting dynamic primary color into CSS variables
+      root.style.setProperty('--primary', hslColor);
+      // Auto-calculate foreground color (simple logic: white text on primary)
+      root.style.setProperty('--primary-foreground', '0 0% 100%');
+    }
+  }, [tenant]);
+
+  return <>{children}</>
 }
